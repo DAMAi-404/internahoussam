@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft v0.1 — awaiting owner answers (see §12) |
+| Status | Draft v0.2 — owner answers integrated; 4 questions still open (see §12) |
 | Last updated | 2026-11-25 |
 | Scope | V1 (pilot → 12 shops) |
 
@@ -23,7 +23,9 @@ The same order is written down **four times** by hand (voice → owner message �
 
 ## 2. Goal
 
-Have **one digital order** go from shop → owner → labo, with each step visible to everyone involved as it happens, and nothing typed twice.
+Have **one digital order** go from shop → owner → labo, with each step visible to everyone involved as it happens, and nothing copied by hand between the shop and the labo.
+
+**Unchanged on purpose:** the owner keeps entering the day's orders into his own PC database. The app doesn't replace that step.
 
 **Explicitly out of scope:** prices, payment, invoicing, stock and inventory, delivery logistics, HR and timesheets.
 
@@ -35,7 +37,6 @@ Have **one digital order** go from shop → owner → labo, with each step visib
 | Time for a shop to place a typical order (~8 lines) | **< 60 s** median | `submitted_at − first line added` (client timestamp) |
 | Adoption | 100% of orders in the app by **2 weeks** after a shop goes live | Owner confirms WhatsApp ordering has stopped |
 | Owner review time per order | **< 30 s** median | `reviewed_at − review_started_at` |
-| Owner re-typing into a PC database | **Eliminated** | Export/history (§6.5) replaces it |
 
 These targets are **assumptions** set to steer design. Replace them with real numbers after one week of pilot data.
 
@@ -44,7 +45,8 @@ These targets are **assumptions** set to steer design. Replace them with real nu
 | Role | Who | Device | Context & constraints |
 |---|---|---|---|
 | **Shop** (×12) | Shop manager, sometimes other staff | Their own Android phone, sometimes iPhone | Low patience and low tech literacy. Busy, standing, one hand free. Will drop back to WhatsApp at the first friction. Arabic first, product names often in French. |
-| **Owner** (×1) | The owner | Phone (+ PC sometimes) | The bottleneck: every order waits for him. Needs speed, batch actions and reliable notifications. |
+| **Owner** (×1) | The owner | Phone (+ PC sometimes) | Every order passes through him. Needs speed, batch actions and reliable notifications. Manages the catalog. |
+| **Deputy** (×1+) | Owner's backup | Phone | Validates orders when the owner is unavailable (asleep, travelling). Same review powers, no catalog or account admin. |
 | **Labo** (×2 teams) | Morning team, night team | **One shared tablet**, always on, in a kitchen | Wet or floured hands, noise, gloves. Night shift crosses midnight. The owner must know which team did what. |
 
 Full permissions are in [ROLES.md](./ROLES.md).
@@ -100,9 +102,9 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | SHP-6 | The cart is saved on the device after every change, so it survives app kills, refreshes and dead batteries. | P0 |
 | SHP-7 | Sending is **idempotent**: a double tap, a retry or a flaky network can never create two orders. | P0 |
 | SHP-8 | Sending while offline queues the order and sends it automatically when the connection returns. The UI says so clearly ("En file d'attente — sera envoyée"). | P0 |
-| SHP-9 | **"Recommander"**: copy a past order into the cart in one tap. This is the biggest time saver for repeat orders. | P1 |
 | SHP-10 | Favourites / "souvent commandés" row at the top of the home screen, computed from the shop's history. | P1 |
 | SHP-11 | Edit or cancel the order while it is still `submitted` (the owner hasn't opened it). Once the owner opens it, it is locked. | P1 |
+| SHP-12 | **"Partager"** fallback: send the cart or an order as compact plain text through the phone's share sheet (WhatsApp, SMS…), with copy to clipboard as backup. Works offline, because the cart is on the device. | P0 |
 
 ### 6.3 Tracking (Shop)
 
@@ -112,7 +114,7 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | TRK-2 | Order detail: each line shows requested qty → approved qty. Reduced lines are highlighted. Refused lines show the owner's reason. | P0 |
 | TRK-3 | Sub-states inside green: *En préparation* → *Prête à récupérer* → *Reçue*. | P0 |
 | TRK-4 | Updates arrive live, with no refresh needed. On reconnect or app focus, data is re-fetched. | P0 |
-| TRK-5 | Push notification when the order is accepted, refused, or ready. ("Ready" removes the owner→shop phone call; see Q2.) | P1 |
+| TRK-5 | Push notification when the order is accepted, refused, or **ready to collect**. This replaces the owner→shop phone call. | P0 |
 | TRK-6 | "Reçue" button: the shop confirms pickup, which closes the trail. | P1 |
 | TRK-7 | Notes the labo left on lines it could not complete are shown to the shop. | P1 |
 
@@ -132,15 +134,18 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | OWN-10 | Push notification when the labo closes an order. Lines the labo could not complete are highlighted. | P0 |
 | OWN-11 | Manage the preset refusal reasons (e.g. "Rupture", "Quantité trop élevée", "Pas aujourd'hui"). | P1 |
 | OWN-12 | Cancel a validated order that the labo has not started yet, with a reason. | P1 |
+| OWN-13 | **"Partager"** a validated order as plain text (share sheet / copy) to paste into the labo WhatsApp group if the tablet is down. Only approved quantities and the labo note are included. | P0 |
+| OWN-14 | **Deputy** account with the same review powers (§6.4). New-order notifications go to the owner and the deputy. Whoever opens an order first locks it, and the other sees "En revue par ‹nom›". Every decision records which person made it. | P1 |
 
-### 6.5 History & export (Owner) — replaces re-typing into the PC
+### 6.5 History (Owner, Deputy)
+
+The owner keeps entering orders into his PC database himself, so V1 has **no export**.
 
 | ID | Requirement | P |
 |---|---|---|
-| HIS-1 | Search orders by shop, date range and status. | P1 |
+| HIS-1 | History screen showing the **last 30 days**, filterable by shop and status. | P1 |
 | HIS-2 | Full event timeline per order (§8). | P1 |
-| HIS-3 | Export to CSV/XLSX: one row per line, with business date, shop, product, requested/approved/prepared qty, team, and timestamps. | P1 |
-| HIS-4 | Daily totals per product and per shop (quantities only, no money). | P2 |
+| HIS-3 | Daily recap: everything prepared on a business day, grouped by shop. Meant to make his PC entry faster than reading the paper register. | P2 |
 
 ### 6.6 Preparation (Labo)
 
@@ -183,6 +188,7 @@ A cart can hold the same `pack` product twice with different variants (e.g. 2 ×
 5. **Optimistic concurrency:** each order has a `version`. A stale write is rejected and the UI re-fetches. No silent overwrite.
 6. **Local durability:** carts and pending actions are saved in IndexedDB until the server confirms them.
 7. **Backups:** daily automated backups plus point-in-time recovery in production.
+8. **Retention:** the app *shows* 30 days, but the database *keeps* every order. At this volume that is a few tens of MB per year (estimate: 12 shops × ~3 orders × ~10 lines per day). Deleting is irreversible and saves nothing meaningful, so no automatic purge (see Q10).
 
 ## 9. Order state machine
 
@@ -219,11 +225,11 @@ How each state appears to the shop:
 
 | Area | Requirement |
 |---|---|
-| Platform | Installable PWA. Android Chrome is primary. iOS Safari ≥ 16.4 must be installed to the home screen to get push. |
+| Platform | Installed PWA on every user's phone (confirmed). Android Chrome and iOS Safari ≥ 16.4. On iPhone, push only works once the app is on the home screen, so first launch shows a 3-step install guide whenever the app runs in a browser tab. |
 | Performance | First load < 3 s on a mid-range Android over 4G. Interactions < 100 ms (optimistic UI). Shop bundle < 250 KB gzip. |
 | Offline | App shell and catalog cached. Cart, submit and labo ticks work offline and sync later. |
 | Languages | Arabic (RTL) and French, chosen per user. Shop and labo default to Arabic, owner to French. *(Q5)* |
-| Time | All times in `Africa/Algiers`. **Business day** starts at 05:00 (configurable), so night-shift orders after midnight belong to the previous day. |
+| Time | All times in `Africa/Algiers`. **Business day** starts at **04:00**, matching the shift change (configurable), so night-shift orders after midnight belong to the previous day. |
 | Accessibility | Touch targets ≥ 48 px (≥ 64 px on the labo tablet). Contrast ≥ 4.5:1. Status never shown by colour alone. |
 | Security | Row-level security on every table. Each shop can see only its own orders. The labo cannot see refused lines or other shops' notes to the owner. |
 | Availability | Hosted on managed services. No self-managed servers in V1. |
@@ -238,19 +244,31 @@ How each state appears to the shop:
 | 3. Owner review | Inbox, line decisions, notes, team assignment | End-to-end flow works on staging |
 | 4. Labo | Tablet mode, team selector, ticks, notes, close | Real shift dry-run |
 | 5. Push & polish | Web Push, sounds, wake lock, PWA install guide | Push received on all pilot devices |
-| **Pilot** | **2 shops**, 1 week, WhatsApp kept as backup | Metrics in §3 measured |
+| **Pilot** | **2 shops**, 1 week. Backup = the "Partager" button (SHP-12, OWN-13), not WhatsApp ordering. | Metrics in §3 measured |
 | 6. Rollout | Remaining 10 shops in 2–3 waves; P1 items (reorder, favourites, export) | WhatsApp ordering stopped |
 
-## 12. Open questions for the owner
+## 12. Decisions & open questions
+
+### Decided (2026-11-25)
+
+| # | Question | Decision |
+|---|---|---|
+| Q2 | Notify the shop directly when the order is ready? | **Yes.** TRK-5 is now P0. |
+| Q3 | Labo shift hours | **Morning 04:00–16:00, night 16:00–04:00** *(to confirm)*. The time chooses the default team; the owner can override. |
+| Q5 | Language | **Arabic + French.** Arabic default for shops and labo, French for the owner. |
+| Q6 | Owner backup | **Yes, a deputy role** (OWN-14). |
+| Q9 | Devices | **Every user installs the PWA on their own phone.** |
+| — | "Recommander" button | **Dropped.** The label was ambiguous ("clear and reorder?"). The "souvent commandés" row (SHP-10) stays. |
+| — | Export to the owner's PC | **Dropped.** The owner keeps entering the data himself. The app shows 30 days of history. |
+| — | WhatsApp fallback | **"Partager" button** (SHP-12, OWN-13) instead of parallel WhatsApp ordering. |
+
+### Still open
 
 | # | Question | Default if no answer |
 |---|---|---|
 | Q1 | Can a shop send several orders a day, or one order per shift? | Several allowed. The UI warns if one is already pending. |
-| Q2 | Should shops get a "ready to collect" notification directly, instead of a phone call from the owner? | Yes. |
-| Q3 | What are the labo shift hours (morning/night)? Does the owner choose the team per order, or does the time decide? | Time decides by default; the owner can override. |
 | Q4 | Unavailable product: show it greyed out, or hide it completely? | Greyed out with "Indisponible" (fewer "why can't I find X" calls). |
-| Q5 | Language: Arabic, French, or both? Which script do shop managers actually read faster? | Both, Arabic default for shops and labo. |
-| Q6 | When the owner is unavailable (sleeping, travelling), who validates? Is a second owner or deputy account needed? | One owner in V1. A `deputy` role is designed but not built. |
 | Q7 | After validation, can the owner change an order (add a forgotten line)? | V1: no. He cancels (if not started) or adds a note. |
 | Q8 | Does the labo need to record *who* prepared, or is the team enough? | Team is enough. Individual names are P2. |
-| Q9 | Which phones do shop managers have (Android/iPhone, versions)? | Plan for Android 10+ and iOS 16.4+. |
+| Q10 | Should data older than 30 days be deleted, or only hidden in the app? | Hidden only. Kept in the database. |
+| Q11 | How many deputies, and should a deputy be able to switch products/packs on and off? | 1 deputy, who can toggle availability but not edit products. |

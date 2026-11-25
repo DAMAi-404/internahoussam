@@ -5,7 +5,8 @@
 | Concern | Choice | Why | Rejected alternative |
 |---|---|---|---|
 | Client | **React 18 + TypeScript + Vite**, single PWA with role-based routes | No SEO or SSR needs, so a static SPA is simplest. One codebase serves all three roles. | Next.js (SSR adds no value here and makes offline/PWA harder); native apps (store friction and 3× the work) |
-| Styling | **Tailwind CSS** + tokens from [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md), **Radix UI** primitives | Fast, consistent, accessible primitives. Logical properties give RTL support. | MUI (heavy, hard to restyle) |
+| Styling | **Tailwind CSS** + iOS-style tokens from [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md), **Radix UI** primitives | Fast, consistent, accessible primitives. Logical properties give RTL support. | MUI (Material look, the opposite of the iOS style chosen) |
+| Sheets & motion | **Vaul** (iOS-style drawer: drag, snap points, rubber-band) + **Motion** (spring animations) | The bottom sheet is the core shop interaction and has to feel native | Hand-rolled sheet (gesture physics are hard to get right) |
 | Server state | **TanStack Query** | Caching, retries, refetch on focus/reconnect, optimistic updates | Hand-rolled fetch logic |
 | Local state | **Zustand** (cart, UI) persisted to **IndexedDB** (`idb-keyval`) | Cart must survive app kills | localStorage (size limit and synchronous) |
 | Backend | **Supabase**: Postgres, Auth, Realtime, Storage, Edge Functions | One managed service covers DB + auth + realtime + files + push sender. No server to operate. | Custom Node API (more code and ops for no gain at this scale) |
@@ -67,7 +68,7 @@ erDiagram
 
 ```sql
 -- enums
-create type user_role      as enum ('owner','shop','labo');
+create type user_role      as enum ('owner','deputy','shop','labo');
 create type quantity_mode  as enum ('count','weight','volume','pack');
 create type order_status   as enum ('submitted','in_review','validated','refused',
                                     'in_preparation','ready','received','cancelled');
@@ -78,6 +79,7 @@ shops            (id, slug unique, name_fr, name_ar, sort_order, active)
 profiles         (user_id pk→auth.users, role, shop_id null→shops, display_name, locale,
                   check ((role='shop') = (shop_id is not null)))
 labo_teams       (id, code unique ('morning','night'), name_fr, name_ar, starts_at time, ends_at time)
+                  -- seed: morning 04:00–16:00, night 16:00–04:00 (PRD Q3, to confirm)
 categories       (id, slug, name_fr, name_ar, sort_order, active)
 products         (id, category_id, name_fr, name_ar null, image_path null,
                   quantity_mode, step int, min_qty int, max_qty int null,
@@ -126,7 +128,8 @@ Key invariants (enforced with constraints or inside RPCs):
 - `refusal_reason` is required when `decision = 'refused'`.
 - `labo_note` is required when `prep in ('partial','not_done')`.
 - `pack_id` is required if and only if `quantity_mode = 'pack'`.
-- `business_date` = `(submitted_at at time zone 'Africa/Algiers' - interval '5 hours')::date`. The 05:00 cutoff is configurable.
+- `business_date` = `(submitted_at at time zone 'Africa/Algiers' - interval '4 hours')::date`. The 04:00 cutoff matches the shift change and is configurable.
+- Retention: no purge. The app queries `business_date >= today − 30` (index on `(shop_id, business_date)` and `(status, business_date)`).
 
 ## 4. Order lifecycle & who can trigger what
 
@@ -149,10 +152,10 @@ All are `SECURITY DEFINER`, set `search_path = public`, and are idempotent on `r
 |---|---|---|
 | `submit_order(id, lines[], shop_note)` | shop | Validates products/packs are active and quantities fit the min/max/step rules, then snapshots names and inserts `submitted`. **If `id` already exists, it returns the existing order** (idempotent). |
 | `update_submitted_order(id, version, lines[], note)` | shop | Only while `submitted` |
-| `cancel_order(id, version, reason?)` | shop (`submitted`) / owner (`validated`, not started) | → `cancelled` |
-| `start_review(id)` | owner | `submitted → in_review` (no-op if already `in_review`) |
-| `release_review(id)` | owner | `in_review → submitted` |
-| `decide_order(id, version, decisions[], note_labo, note_shop, team_id)` | owner | Applies every line decision atomically → `validated` or `refused` |
+| `cancel_order(id, version, reason?)` | shop (`submitted`) / owner, deputy (`validated`, not started) | → `cancelled` |
+| `start_review(id)` | owner, deputy | `submitted → in_review` (no-op if already `in_review`) |
+| `release_review(id)` | owner, deputy | `in_review → submitted` |
+| `decide_order(id, version, decisions[], note_labo, note_shop, team_id)` | owner, deputy | Applies every line decision atomically → `validated` or `refused` |
 | `set_line_prep(line_id, prep, prepared_qty?, note?, request_id)` | labo | Updates the line. The first one moves the order `validated → in_preparation`. Last-write-wins per line (single tablet), idempotent by `request_id`. |
 | `close_order(id, version)` | labo | Requires no `todo` lines → `ready` |
 | `confirm_received(id)` | shop | `ready → received` |
@@ -162,7 +165,7 @@ All are `SECURITY DEFINER`, set `search_path = public`, and are idempotent on `r
 
 ```
 Shop:   channel orders:shop_id=eq.<id>      → invalidate ['orders', shopId]
-Owner:  channel orders (all)                → invalidate inbox / board
+Owner/deputy:  channel orders (all)                → invalidate inbox / board
         channel order_lines (all)           → live progress during preparation
 Labo:   channel orders:status=in.(validated,in_preparation,ready)
 ```
@@ -204,10 +207,10 @@ sequenceDiagram
 
 | Event | Recipients |
 |---|---|
-| `submitted` | owner |
+| `submitted` | owner + deputy |
 | `validated` / `refused` | the shop |
 | `validated` | labo tablet |
-| `ready` | owner + the shop *(PRD Q2)* |
+| `ready` | owner + deputy + the shop ("prête à récupérer") |
 | `line_prepped` with partial / not done | owner (batched into the `ready` notification) |
 
 Fallbacks: in-app sound + title badge while the app is open. Labo: repeating alarm until acknowledged. iOS: push only works after "Add to Home Screen" (iOS ≥ 16.4), so onboarding includes an install guide screen.
@@ -233,7 +236,7 @@ Fallbacks: in-app sound + title badge while the app is open. Labo: repeating ala
 │  │  ├─ labo/               tablet preparation
 │  │  └─ history/            owner history & export
 │  ├─ components/ui/         design-system components only
-│  ├─ lib/                   supabase client, outbox, quantity formatting, i18n, time
+│  ├─ lib/                   supabase client, outbox, quantity formatting, shareText, i18n, time
 │  ├─ locales/{ar,fr}.json
 │  ├─ types/database.ts      generated: supabase gen types
 │  └─ sw.ts                  service worker (push, cache, background sync)

@@ -1,6 +1,6 @@
 # Roles & Permissions
 
-Three roles in V1, plus one reserved for later. Roles are enforced in the **database** (Row-Level Security + `SECURITY DEFINER` functions), not only in the UI. A tampered client gets nothing more than its role allows.
+Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `SECURITY DEFINER` functions), not only in the UI. A tampered client gets nothing more than its role allows.
 
 ## 1. Role definitions
 
@@ -9,7 +9,7 @@ Three roles in V1, plus one reserved for later. Roles are enforced in the **data
 | `owner` | 1 | Personal account (email + password, magic-link fallback) | Long-lived; re-auth for sensitive actions (catalog import, user reset) |
 | `shop` | 12 (one per shop) | **Shop account**, not a personal one. Login = choose shop + 6-digit PIN | Permanent on the device. Owner can revoke/reset the PIN. |
 | `labo` | 1 (the shared tablet) | Device account + **active team** (`morning` / `night`) chosen at shift start | Permanent on the tablet |
-| `deputy` *(reserved, not built)* | 0 | Personal | Owner powers minus catalog & user management — answers PRD Q6 |
+| `deputy` | 1 (more possible) | Personal account, like the owner | Owner's review powers, no catalog editing or account admin (PRD OWN-14) |
 
 **Why shop accounts, not personal ones:** staff turnover is high and managers share phones. A per-shop identity means a new manager only needs the PIN. If per-person accountability is needed later, add an optional "who are you?" picker on top of the shop account, the same pattern as labo teams.
 
@@ -21,44 +21,45 @@ Three roles in V1, plus one reserved for later. Roles are enforced in the **data
 
 ### Catalog
 
-| Action | owner | shop | labo |
-|---|---|---|---|
-| View categories / products / packs | ✅ | ✅ active + greyed inactive | ✅ (names only, for display) |
-| Create / edit / deactivate product | ✅ | ❌ | ❌ |
-| Toggle pack availability | ✅ | ❌ | ❌ |
-| Reorder / hide categories | ✅ | ❌ | ❌ |
+| Action | owner | deputy | shop | labo |
+|---|---|---|---|---|
+| View categories / products / packs | ✅ | ✅ | ✅ active + greyed inactive | ✅ (names only, for display) |
+| Create / edit product | ✅ | ❌ | ❌ | ❌ |
+| Toggle product / pack availability | ✅ | ✅ *(Q11)* | ❌ | ❌ |
+| Reorder / hide categories | ✅ | ❌ | ❌ | ❌ |
 
 ### Orders
 
-| Action | owner | shop | labo |
-|---|---|---|---|
-| Create & submit order | ❌ | 🔒 own shop | ❌ |
-| Edit / cancel while `submitted` | ❌ | 🔒 own shop | ❌ |
-| View orders | ✅ all | 🔒 own shop | 🔒 only `validated` / `in_preparation` / `ready` (+ recent history) |
-| See refused lines + reasons | ✅ | 🔒 own | ❌ (hidden) |
-| See owner's note to labo | ✅ | ❌ | ✅ |
-| See shop's note to owner | ✅ | 🔒 own | ❌ |
-| Start review / decide lines / validate / refuse | ✅ | ❌ | ❌ |
-| Assign labo team | ✅ | ❌ | ❌ |
-| Cancel validated (not started) order | ✅ | ❌ | ❌ |
-| Tick line / partial / not done + note | ❌ | ❌ | ✅ |
-| Close order (`ready`) | ❌ | ❌ | ✅ |
-| Confirm received | ❌ | 🔒 own | ❌ |
-| View event timeline | ✅ | 🔒 own (simplified) | ❌ |
-| Export history | ✅ | ❌ | ❌ |
+| Action | owner | deputy | shop | labo |
+|---|---|---|---|---|
+| Create & submit order | ❌ | ❌ | 🔒 own shop | ❌ |
+| Edit / cancel while `submitted` | ❌ | ❌ | 🔒 own shop | ❌ |
+| View orders | ✅ all | ✅ all | 🔒 own shop | 🔒 only `validated` / `in_preparation` / `ready` (+ recent history) |
+| See refused lines + reasons | ✅ | ✅ | 🔒 own | ❌ (hidden) |
+| See owner's note to labo | ✅ | ✅ | ❌ | ✅ |
+| See shop's note to owner | ✅ | ✅ | 🔒 own | ❌ |
+| Start review / decide lines / validate / refuse | ✅ | ✅ | ❌ | ❌ |
+| Assign labo team | ✅ | ✅ | ❌ | ❌ |
+| Cancel validated (not started) order | ✅ | ✅ | ❌ | ❌ |
+| Tick line / partial / not done + note | ❌ | ❌ | ❌ | ✅ |
+| Close order (`ready`) | ❌ | ❌ | ❌ | ✅ |
+| Confirm received | ❌ | ❌ | 🔒 own | ❌ |
+| View event timeline | ✅ | ✅ | 🔒 own (simplified) | ❌ |
+| Share order as text | ✅ | ✅ | 🔒 own | ❌ |
 
 ### Administration
 
-| Action | owner | shop | labo |
-|---|---|---|---|
-| Reset shop PIN / revoke device | ✅ | ❌ | ❌ |
-| Edit labo team schedules | ✅ | ❌ | ❌ |
-| Switch active labo team | ❌ | ❌ | ✅ (logged) |
-| Manage refusal-reason presets | ✅ | ❌ | ❌ |
-| Edit or delete `order_events` | ❌ | ❌ | ❌ — **nobody**, by design |
+| Action | owner | deputy | shop | labo |
+|---|---|---|---|---|
+| Reset shop PIN / revoke device | ✅ | ❌ | ❌ | ❌ |
+| Edit labo team schedules | ✅ | ❌ | ❌ | ❌ |
+| Switch active labo team | ❌ | ❌ | ❌ | ✅ (logged) |
+| Manage refusal-reason presets | ✅ | ❌ | ❌ | ❌ |
+| Edit or delete `order_events` | ❌ | ❌ | ❌ | ❌ — **nobody**, by design |
 
 ## 3. Enforcement
 
+0. **Reviewer = owner or deputy.** Every review RPC accepts `auth_role() in ('owner','deputy')` and stores `reviewed_by`, so the trail shows which person decided.
 1. **Profile row per auth user:** `profiles(user_id, role, shop_id)`. `shop_id` is required when `role = 'shop'` and null otherwise (CHECK constraint).
 2. **Helper functions** used by every policy: `auth_role()` and `auth_shop_id()`, which read `profiles` and are `STABLE SECURITY DEFINER`.
 3. **Reads:** RLS `SELECT` policies per table, following the matrix above.

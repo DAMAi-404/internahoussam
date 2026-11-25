@@ -10,7 +10,7 @@ It replaces the WhatsApp messages, paper register and manual re-typing with one 
 | Role | Does |
 |---|---|
 | **Shop** (12) | Taps products, picks quantities, sends. Follows status: 🟠 waiting → 🟢 accepted → ready, or 🔴 refused with the reason. |
-| **Owner** | Receives all orders with a push notification. Accepts, reduces or refuses each line, adds a labo note, assigns a team, and follows preparation live. Manages the catalog. |
+| **Owner** (+ deputy) | Receives all orders with a push notification. Accepts, reduces or refuses each line, adds a labo note, assigns a team, and follows preparation live. Manages the catalog. |
 | **Labo** | Shared tablet, morning/night team. Sees only validated orders, ticks lines, notes anything not completed, closes the order. |
 
 Shops: El Madania, 1er Mai, Sidi Abdelah, Kouba, Rouiba, Birtouta, Boulevard, Aïn Naadja, Bir Mourad Raïs, Bachedjerah, Kitani, Koucha.
@@ -27,7 +27,7 @@ Shops: El Madania, 1er Mai, Sidi Abdelah, Kouba, Rouiba, Birtouta, Boulevard, A�
 
 ## Stack
 
-React + TypeScript + Vite PWA · Tailwind + Radix · TanStack Query · Supabase (Postgres, Auth, Realtime, Storage, Edge Functions) · Web Push · Cloudflare Pages.
+React + TypeScript + Vite PWA · iOS-style UI (Tailwind + Radix + Vaul) · TanStack Query · Supabase (Postgres, Auth, Realtime, Storage, Edge Functions) · Web Push · Cloudflare Pages.
 
 ## Getting started
 
