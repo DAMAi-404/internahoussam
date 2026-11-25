@@ -9,7 +9,7 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 | `owner` | 1 | Personal account (email + password, magic-link fallback) | Long-lived; re-auth for sensitive actions (catalog import, user reset) |
 | `shop` | 12 (one per shop) | **Shop account**, not a personal one. Login = choose shop + 6-digit PIN | Permanent on the device. Owner can revoke/reset the PIN. |
 | `labo` | 1 (the shared tablet) | Device account + **active team** (`morning` / `night`) chosen at shift start | Permanent on the tablet |
-| `deputy` | 1 (more possible) | Personal account, like the owner | Owner's review powers, no catalog editing or account admin (PRD OWN-14) |
+| `deputy` | 1 | Personal account, like the owner | Owner's review powers, no catalog editing or account admin (PRD OWN-14) |
 
 **Why shop accounts, not personal ones:** staff turnover is high and managers share phones. A per-shop identity means a new manager only needs the PIN. If per-person accountability is needed later, add an optional "who are you?" picker on top of the shop account, the same pattern as labo teams.
 
@@ -33,7 +33,9 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 | Action | owner | deputy | shop | labo |
 |---|---|---|---|---|
 | Create & submit order | ❌ | ❌ | 🔒 own shop | ❌ |
-| Edit / cancel while `submitted` | ❌ | ❌ | 🔒 own shop | ❌ |
+| Edit / cancel until sent to labo (`submitted`, `in_review`) | ❌ | ❌ | 🔒 own shop | ❌ |
+| Add note to an order or line (review, and after validation until `ready`) | ✅ | ✅ | ❌ | ❌ |
+| Change quantities after validation | ❌ | ❌ | ❌ | ❌ |
 | View orders | ✅ all | ✅ all | 🔒 own shop | 🔒 only `validated` / `in_preparation` / `ready` (+ recent history) |
 | See refused lines + reasons | ✅ | ✅ | 🔒 own | ❌ (hidden) |
 | See owner's note to labo | ✅ | ✅ | ❌ | ✅ |
@@ -53,9 +55,10 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 |---|---|---|---|---|
 | Reset shop PIN / revoke device | ✅ | ❌ | ❌ | ❌ |
 | Edit labo team schedules | ✅ | ❌ | ❌ | ❌ |
-| Switch active labo team | ❌ | ❌ | ❌ | ✅ (logged) |
+| Switch active labo team | ❌ | ❌ | ❌ | ✅ with team PIN (logged) |
+| Set team PINs | ✅ | ❌ | ❌ | ❌ |
 | Manage refusal-reason presets | ✅ | ❌ | ❌ | ❌ |
-| Edit or delete `order_events` | ❌ | ❌ | ❌ | ❌ — **nobody**, by design |
+| Edit or delete `order_events` | ❌ | ❌ | ❌ | ❌ — **nobody**. The only deletion is the nightly 30-day retention job (runs as the database, not as a user). |
 
 ## 3. Enforcement
 

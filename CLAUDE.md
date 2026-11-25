@@ -28,7 +28,8 @@ If code and docs disagree, stop and ask. Don't silently pick one. Update the doc
 ### Data integrity
 - Order state changes happen **only** through Postgres RPCs in `supabase/migrations`. The client never `insert`s/`update`s `orders`, `order_lines` or `order_events` directly.
 - Every RPC that mutates an order: checks role + scope + current status + `version`, writes the change **and** an `order_events` row in the same transaction.
-- `order_events` is append-only. Never write a migration that updates or deletes from it.
+- `order_events` is append-only. The **only** deletion is the nightly retention job `purge_old_orders()` (30 days, final-status orders only, see ARCHITECTURE §10). Never write any other update or delete on it.
+- After validation, nothing changes quantities. Owner/deputy additions go through `add_note` (append-only).
 - Quantities are **integers in base units** (pieces, grams, millilitres, packs). No floats anywhere in the quantity path. Formatting lives in `src/lib/quantity.ts` only.
 - Reviewer actions accept role `owner` **or** `deputy` and always store who acted.
 - Order lines store a **snapshot** of product name/pack/mode. Never join to `products` to display a historical order.
@@ -48,11 +49,12 @@ If code and docs disagree, stop and ask. Don't silently pick one. Update the doc
 
 ### UI
 - Use design-system components from `src/components/ui`. Don't hand-roll buttons, pills or sheets in features.
-- Status is displayed only via `<StatusPill>`.
+- Status is displayed only via `<StatusPill>` (coloured dot + word).
 - Touch targets ≥ 48 px (labo ≥ 64 px). One primary action per screen, at the bottom.
 - CSS logical properties only (`ms-`, `pe-`, `start-`). No `left`/`right`/`ml`/`pr`. Must work in RTL.
 - Every user-facing string goes through i18n with both `ar` and `fr` keys. No hard-coded text.
 - Wrap number+unit in `<bdi>` so it never reorders in RTL.
+- Brand: **Mahroussa green + beige** (tokens in DESIGN_SYSTEM.md). **No decorative icons**: no coloured icon tiles, no icon per category, no emoji. Products are shown with the owner's photos. Icons only where they do a job (back, share, search, tab bar).
 - Visual language is **iOS (Apple HIG)**: inset grouped lists, sheets with a grabber, segmented controls, translucent bars, spring motion. No Material patterns (ripples, FABs, floating labels). Follow `docs/DESIGN_SYSTEM.md`.
 - Never use SF Pro font files or SF Symbols: their licence only allows Apple platforms. Use the system font stack + Lucide icons as specified.
 - Inputs use a font size ≥ 16 px (iOS zooms the page on smaller inputs).

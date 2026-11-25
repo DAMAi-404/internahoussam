@@ -1,195 +1,162 @@
-# Design System: "iOS-native"
+# Design System: "Mahroussa, iOS-native"
 
-Mahroussa Pro should feel like an app Apple shipped: calm, precise and obvious. The reference is Apple's **Human Interface Guidelines (HIG)**, adapted for busy shop staff on any phone (iPhone *and* Android) and a floury kitchen tablet.
+Mahroussa Pro should feel like a native iPhone app with El Mahroussa's own identity: **deep green on warm beige**, the owner's product photos, and nothing generic. It follows Apple's **Human Interface Guidelines (HIG)** for behaviour (sheets, segmented controls, large titles, spring motion), and uses the brand for everything you look at.
 
-> Visual preview (8 screens: shop, owner, labo, tokens): https://claude.ai/artifact/F55nzxpUY1sDbQFMYRY5QQ (private until shared). If the preview and this file disagree, this file wins.
+> Visual preview (shop, owner, labo, tokens): https://claude.ai/artifact/F55nzxpUY1sDbQFMYRY5QQ (private until shared). If the preview and this file disagree, this file wins.
 
 ## 1. Principles
 
-1. **Clarity over decoration.** White space, one accent colour, content first. No gradients, no heavy shadows, no illustrations.
-2. **One screen, one job.** A large title says where you are. One primary button sits at the bottom, under the thumb.
-3. **Tap, don't type.** Quick chips first. A typed quantity is a fallback the owner enables per product.
-4. **Status is unmistakable.** Colour + SF-style icon + word, never colour alone.
-5. **Direct manipulation.** Sheets you can drag down, rows you tap, toggles you flip. Every touch reacts within 100 ms.
-6. **Same thing, same place.** Status pills, sheets and buttons behave identically for every role.
-7. **RTL-native.** Arabic is a first-class layout. iOS mirrors its UI in Arabic, and so do we.
+1. **The product is the picture.** Shops recognise products by their photo and name. No decorative icons, no coloured icon tiles, no emoji. Icons appear only where they do a job: back, share, search, the tab bar.
+2. **Brand, not template.** Beige paper background, deep green for the single primary action, cream cards. One colour family, used with restraint.
+3. **One screen, one job.** A large title says where you are. One green button sits at the bottom, under the thumb.
+4. **Tap, don't type.** Quick chips first. Typing a quantity is a fallback the owner enables per product.
+5. **Status is a word.** A coloured dot and a word, the same everywhere.
+6. **Direct manipulation.** Sheets you drag, chips you tap, toggles you flip. Every touch reacts within 100 ms.
+7. **RTL-native.** Arabic is a first-class layout, mirrored like iOS.
 
-## 2. Typography
+## 2. Colour
 
-### Font stack
-
-```css
---font: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans Arabic", system-ui, sans-serif;
---font-rounded: ui-rounded, -apple-system, "Inter", "IBM Plex Sans Arabic", sans-serif; /* numbers in steppers & badges */
-```
-
-| Device | What renders | Download |
-|---|---|---|
-| iPhone / iPad / Mac | **SF Pro + SF Arabic** (the real iOS system fonts) | none |
-| Android / Windows | **Inter** (Latin, closest open match to SF) + **IBM Plex Sans Arabic** | self-hosted WOFF2, loaded only on those devices, cached offline |
-
-**Why not ship SF Pro everywhere:** Apple's font licence only allows SF on Apple platforms. The system stack gives the real thing on iPhones and a very close match elsewhere, legally.
-
-Digits: Western (0-9) in both languages. Quantities use `font-variant-numeric: tabular-nums` so columns align.
-
-### Type scale (iOS Dynamic Type "Large" defaults)
-
-| Token | Size / line height | Weight | Use |
-|---|---|---|---|
-| `largeTitle` | 34 / 41 | 700 | Top of each main screen ("Commander", "Commandes") |
-| `title1` | 28 / 34 | 700 | Labo order header, sheet titles |
-| `title2` | 22 / 28 | 700 | Shop name on owner cards |
-| `title3` | 20 / 25 | 600 | Section headings |
-| `headline` | 17 / 22 | 600 | Row titles, product names, buttons |
-| `body` | 17 / 22 | 400 | **Default text** |
-| `callout` | 16 / 21 | 400 | Notes, secondary rows |
-| `subheadline` | 15 / 20 | 400 | Meta (time ago, line count) |
-| `footnote` | 13 / 18 | 400 | Section footers, timestamps. **The smallest size allowed.** |
-
-The iOS `caption` sizes (11–12 px) are **not used**: too small for this audience. Labo tablet: every size × 1.25. Respect the user's system text size (`rem`-based) up to 200%.
-
-## 3. Colour
-
-iOS semantic system colours. Each colour has a **vibrant** value (fills, icons, large shapes) and an **accessible** value (text on white, ≥ 4.5:1). These are Apple's published "increased contrast" variants.
+Palette is **provisional** until the exact brand hex codes or logo arrive (PRD Q12). Every text/background pair below is checked at ≥ 4.5:1.
 
 ```css
 :root {
-  /* backgrounds (iOS grouped style) */
-  --bg-grouped:     #F2F2F7;   /* systemGroupedBackground: screen */
-  --bg-cell:        #FFFFFF;   /* secondarySystemGroupedBackground: rows/cards */
-  --fill:           rgb(120 120 128 / .12); /* tertiarySystemFill: chips, segmented track */
-  --separator:      rgb(60 60 67 / .29);    /* hairline, 0.5px on retina */
+  /* brand */
+  --green:        #1F5A3D;  /* primary buttons, selected chip, links. White on it = 8.1:1 */
+  --green-press:  #164530;
+  --green-tint:   #E2ECE3;  /* tinted buttons, selected rows */
 
-  /* labels */
-  --label:          #000000;
-  --label-2:        #6C6C70;                /* secondary text: solid, not iOS's 60% alpha, so it passes 4.5:1 on both white and #F2F2F7 */
-  --label-3:        rgb(60 60 67 / .30);    /* placeholders, disabled */
+  /* beige surfaces */
+  --bg:           #F3EDE2;  /* screen background (beige paper) */
+  --surface:      #FFFCF6;  /* cards, cells, sheets (cream) */
+  --fill:         #E8E0D1;  /* chip/segmented track, photo placeholder */
+  --separator:    rgb(74 60 36 / .18);
 
-  /* accent: brand placeholder until El Mahroussa colours are provided */
-  --accent:         #007AFF;   /* systemBlue (default iOS tint) */
-  --accent-text:    #0040DD;
+  /* text (warm, never pure black/grey) */
+  --label:        #1C1A15;
+  --label-2:      #6A6256;  /* 4.9:1 on --bg, 5.4:1 on --surface */
+  --label-3:      #A39A8B;  /* placeholders, disabled only */
 
-  /* status: fixed meaning everywhere */
-  --pending:        #FF9500;  --pending-text: #C93400;  /* 🟠 En attente */
-  --ok:             #34C759;  --ok-text:      #248A3D;  /* 🟢 Acceptée   */
-  --refused:        #FF3B30;  --refused-text: #D70015;  /* 🔴 Refusée    */
-  --info:           #5856D6;  --info-text:    #3634A3;  /* indigo: en préparation (owner/labo) */
-  --warn:           #FFCC00;  --warn-text:    #A05A00;  /* reduced qty / partial line */
-  --neutral:        #8E8E93;  --neutral-text: #636366;  /* ⚪ Annulée */
-}
-
-@media (prefers-color-scheme: dark) {           /* P1: follows the system setting */
-  :root {
-    --bg-grouped: #000000; --bg-cell: #1C1C1E; --fill: rgb(118 118 128 / .24);
-    --separator: rgb(84 84 88 / .6);
-    --label: #FFFFFF; --label-2: rgb(235 235 245 / .6); --label-3: rgb(235 235 245 / .3);
-    --accent: #0A84FF; --accent-text: #409CFF;
-    --pending: #FF9F0A; --ok: #30D158; --refused: #FF453A; --info: #5E5CE6; --warn: #FFD60A;
-    /* in dark mode the vibrant colours are used for text too (they pass on #1C1C1E) */
-  }
+  /* status: dot colour / text colour / pill background */
+  --pending:  #F08A24;  --pending-text:  #A8360A;  --pending-bg:  #FBE6D4;  /* En attente */
+  --ok:       #3FA34D;  --ok-text:       #256B33;  --ok-bg:       #DDEFD9;  /* Acceptée, Prête */
+  --refused:  #E5483B;  --refused-text:  #B42318;  --refused-bg:  #FBE1DE;  /* Refusée */
+  --prep:     #5B5BD6;  --prep-text:     #3F3F9E;  --prep-bg:     #E4E4F5;  /* En préparation (owner/labo) */
+  --warn:     #E0A800;  --warn-text:     #8A5A00;  --warn-bg:     #F8EBC8;  /* Réduite, Partiel */
+  --neutral:  #9A948A;  --neutral-text:  #625D55;  --neutral-bg:  #E9E4DA;  /* Annulée, Reçue */
 }
 ```
 
-**Accent colour decision:** iOS blue is the placeholder. If El Mahroussa has a brand colour, it replaces `--accent` only. Status colours never change. Avoid an orange, green or red brand accent, because it would clash with the status meanings.
+**Green brand vs green "Acceptée":** both are green on purpose, since green is the brand and green also means "OK". They never get confused because they take different forms: the brand green is a **solid button with cream text**, while "Acceptée" is a **light pill with a dot and a word**. Status colours never fill buttons.
+
+### Labo team themes (LAB-2)
+
+| Team | Theme | Background / cards / text | Header band |
+|---|---|---|---|
+| **Matin** 04:00–16:00 | Sand (light) | `--bg` / `--surface` / `--label` | `#E9D9B4`, text `#4A3A12`, label "Équipe matin" |
+| **Nuit** 16:00–04:00 | Night (dark) | `#12161F` / `#1C2230` / `#F2EEE6`, secondary `#A8A296` | `#262E45`, text `#E6E9F5`, label "Équipe nuit" |
+
+The whole tablet changes look at handover, so anyone in the kitchen sees which team is active from across the room. The dark night theme is also easier on the eyes at 2 a.m. On dark, status text uses the vibrant dot colours, which pass 4.5:1 on `#1C2230`.
 
 ### Status mapping
 
-| Status | Colour | Icon (Lucide ≈ SF Symbol) | FR | AR |
-|---|---|---|---|---|
-| submitted / in_review | `pending` | `clock` ≈ clock.fill | En attente | في الانتظار |
-| validated | `ok` | `circle-check` ≈ checkmark.circle.fill | Acceptée | مقبولة |
-| in_preparation | `ok` (shop) / `info` (owner, labo) | `chef-hat` | En préparation | قيد التحضير |
-| ready | `ok` | `package-check` ≈ shippingbox.fill | Prête à récupérer | جاهزة للاستلام |
-| received | `neutral` | `check-check` | Reçue | تم الاستلام |
-| refused | `refused` | `circle-x` ≈ xmark.circle.fill | Refusée | مرفوضة |
-| cancelled | `neutral` | `ban` | Annulée | ملغاة |
+| Status | Token | FR | AR |
+|---|---|---|---|
+| submitted / in_review | `pending` | En attente | في الانتظار |
+| validated | `ok` | Acceptée | مقبولة |
+| in_preparation | `ok` (shop) / `prep` (owner, labo) | En préparation | قيد التحضير |
+| ready | `ok` | Prête à récupérer | جاهزة للاستلام |
+| received | `neutral` | Reçue | تم الاستلام |
+| refused | `refused` | Refusée | مرفوضة |
+| cancelled | `neutral` | Annulée | ملغاة |
 
-Pill style: background = status colour at 15% opacity, text and icon = `-text` value, `headline` weight, fully rounded corners.
+`StatusPill`: `--*-bg` background, 8 px dot in the vibrant colour, word in `--*-text`, 15 pt semibold, height 28, fully rounded. The word carries the meaning, so colour is never the only signal.
+
+## 3. Typography
+
+```css
+--font: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans Arabic", system-ui, sans-serif;
+--font-num: ui-rounded, -apple-system, "Inter", sans-serif;   /* quantities, steppers */
+```
+
+iPhone renders SF Pro + SF Arabic (the real iOS fonts). Android renders Inter + IBM Plex Sans Arabic, self-hosted and cached. SF files are never shipped, because Apple's licence only allows them on Apple platforms. Digits are Western 0-9 with `tabular-nums`.
+
+| Token | Size / LH | Weight | Use |
+|---|---|---|---|
+| `largeTitle` | 34 / 41 | 700 | Main screen titles |
+| `title1` | 28 / 34 | 700 | Order header, labo shop name |
+| `title2` | 22 / 28 | 700 | Sheet product name |
+| `title3` | 20 / 25 | 600 | Section headings |
+| `headline` | 17 / 22 | 600 | Product names, buttons |
+| `body` | 17 / 22 | 400 | Default |
+| `subheadline` | 15 / 20 | 400 | Meta |
+| `footnote` | 13 / 18 | 400–600 | Section labels, timestamps. **Minimum size.** |
+
+Labo tablet: × 1.25.
 
 ## 4. Shape, spacing, depth
 
-- **Spacing** (4 pt grid): `4, 8, 12, 16, 20, 24, 32`. Screen side margin is **16** (iOS default); inset grouped lists use **16** inset.
-- **Corner radius:** buttons and fields `12`, cells and cards `12` (inset grouped), sheets `16` on the top corners, chips and pills `full`, product photos `10`, app icon style tiles `22%`.
-  - Progressive enhancement: `corner-shape: squircle` where the browser supports it, for Apple's "continuous corners". Otherwise plain `border-radius`.
-- **Hairlines:** separators are `0.5px` on 2× and 3× screens (`1px` otherwise), inset to align with the text, not the cell edge, exactly as in iOS lists.
-- **Depth:** iOS is flat. Only two levels:
-  - `bar`: translucent material: `background: rgb(249 249 249 / .8); backdrop-filter: saturate(180%) blur(20px);` used for the nav bar, tab bar and cart bar.
-  - `sheet`: `0 -1px 0 var(--separator), 0 10px 40px rgb(0 0 0 / .18)` with a dimmed backdrop (`rgb(0 0 0 / .4)`).
+- 4 pt grid: `4, 8, 12, 16, 20, 24, 32`. Side margin 16.
+- Radius: product card `16`, cells and buttons `12`, sheets `16` (top corners), chips and pills `full`, photos `12`. `corner-shape: squircle` where the browser supports it.
+- Hairlines `0.5px` in `--separator`, inset to the text.
+- Depth: flat. Translucent bars (`rgb(243 237 226 / .85)` + `backdrop-filter: saturate(180%) blur(20px)`) and sheets (`0 10px 40px rgb(40 30 10 / .18)`). Cards have **no shadow**: cream on beige is enough contrast.
 
 ## 5. Layout & touch
 
-| Rule | Phone (shop, owner, deputy) | Labo tablet |
+| Rule | Phone | Labo tablet |
 |---|---|---|
-| Min touch target | **44 × 44 pt** (HIG); we use **48** for shop rows | **64 × 64** |
-| Primary button | 50 pt tall, full width minus 16 margins, radius 12 | 64 pt |
-| Navigation | **Large-title nav bar** (collapses to inline on scroll) + **tab bar** | Fixed header + columns |
-| Safe areas | `viewport-fit=cover`; pad with `env(safe-area-inset-*)` | same |
+| Min touch target | 44 pt (48 for shop rows) | 64 |
+| Primary button | 50 pt, full width, `--green` | 64 pt |
+| Navigation | Large title + tab bar | Team header band + order columns |
 
 Tab bars:
-- **Shop:** `Commander` · `Mes commandes` (badge = orders awaiting action)
-- **Owner / deputy:** `À valider` (badge) · `En cours` · `Historique` · `Catalogue` (owner only)
-- **Labo:** no tab bar. One board.
+- **Shop:** Commander · Mes commandes
+- **Owner/deputy:** À valider · En cours · Historique · Catalogue (owner only)
 
-RTL: logical CSS properties only (`ps-4`, `me-2`, `start-0`). Chevrons and back arrows flip. Number+unit groups (`250 g`) are wrapped in `<bdi>`.
+Logical CSS only. Numbers with units go in `<bdi>`.
 
-## 6. Components
+## 6. Components (`src/components/ui`)
 
-All components live in `src/components/ui`. Feature code never restyles them.
-
-| Component | iOS reference | Spec |
-|---|---|---|
-| `NavBar` | UINavigationBar large title | Large title 34 pt, collapses on scroll, translucent `bar` material, trailing icon buttons 44 pt |
-| `TabBar` | UITabBar | 49 pt + safe area, icon 24 + label 10 pt *(the single exception to the 13 pt minimum, as in iOS)*, active = accent, badge = `refused` red |
-| `Button` | Filled / tinted / plain | **filled** (accent bg, white text, the one primary action) · **tinted** (accent at 15% opacity, accent text) · **plain** (text only) · **destructive** (red). Pressed: opacity .7, scale .98, 100 ms. Loading: spinner replaces the label, width is kept. No ripples. |
-| `List` / `Cell` | Inset grouped table view | White cells on a grey background, radius 12, hairline separators, optional leading icon in a 29 pt rounded square, trailing value / chevron / toggle. Section header in `footnote` uppercase `label-2`. |
-| `SearchField` | UISearchBar | `fill` background, radius 10, magnifier icon, 36 pt tall, "Annuler" appears on focus |
-| `CategoryTile` | Springboard-ish tile | 2-col grid, icon in a tinted rounded square, name in `headline`, 96 pt tall |
-| `ProductCell` | List row with thumbnail | 56 pt photo (radius 10) + name + unit hint. When in the cart: trailing count badge in accent. Inactive: `label-3` text + "Indisponible". |
-| `Sheet` | UISheetPresentationController (via **Vaul**) | Grabber 36 × 5, detents **medium / large**, drag to dismiss with rubber-band, spring `stiffness 400, damping 40` |
-| `QuantitySheet` | — | Product photo + name. By mode: **count** → `Stepper` + chips · **weight/volume** → chips (`250 g` `500 g` `1 kg`) + "Autre quantité" opening a numeric keypad with unit suffix · **pack** → `SegmentedControl` of active packs + `Stepper`. Big filled "Ajouter" button. |
-| `Stepper` | UIStepper, enlarged | − / + as 44 pt circles in `fill`, value in rounded font 28 pt between them. Long-press repeats. Respects min/max/step. |
-| `Chip` | iOS 17 filter chips | `fill` background, selected = accent fill + white text, 36 pt tall |
-| `SegmentedControl` | UISegmentedControl | `fill` track, white sliding thumb with a small shadow, 32 pt (40 on owner review). Used for pack choice and **Accepter / Réduire / Refuser**. |
-| `Toggle` | UISwitch | 51 × 31, green `ok` when on. Used for product and pack availability. |
-| `StatusPill` | — | See §3. **The only way to show a status.** |
-| `OrderCell` | Mail-style row | Leading status dot, title (shop or order code), `subheadline` meta, trailing time ago, progress ring for orders in preparation |
-| `ActionSheet` | UIAlertController action sheet | For irreversible confirmations (send, validate, close order, cancel). Destructive option in red. Cancel button separated. |
-| `Alert` | UIAlertController alert | Rare: blocking errors only |
-| `Banner` | Notification banner | Top, rounded, `bar` material, auto-hide 3 s: "Commande envoyée ✓", "Hors ligne · sera envoyée" |
-| `CartBar` | Translucent bottom bar above the tab bar | "4 articles" + filled "Envoyer" button. Shows an outbox badge while sending is pending. |
-| `ShareButton` | iOS share sheet | `navigator.share({ text })` opens the native share sheet (WhatsApp etc.). Fallback: copy to clipboard + banner "Copié". |
-| `EmptyState` | iOS ContentUnavailableView | SF-style icon 48 pt in `label-3`, `title3` heading, one sentence, one tinted button |
+| Component | Spec |
+|---|---|
+| `CategoryBar` | Horizontal scrolling row of **text chips** under the title. The first chip is "Habituels" (frequently ordered, SHP-10), then the 10 categories in the fixed order. Selected chip = `--green` filled, cream text. Others = `--fill`. 40 pt tall. Sticky under the nav bar while scrolling. **No icons.** |
+| `ProductCard` | 2-column grid, `--surface`, radius 16. **Photo on top** (square, radius 12, inset 6). No photo: a `--fill` block with the product's initials in `title2` `--label-2`. Below: name (`headline`, 2 lines max) and the unit hint (`footnote`: "à la pièce", "au poids", "pack 5 L · 10 L"). **In cart:** 2 px `--green` ring + a green badge in the top corner with the quantity (`200`, `10 L × 2`). **Unavailable:** opacity .45, "Indisponible" pill over the photo, not tappable. |
+| `Sheet` | Vaul, grabber, detents medium/large, spring `400/40`, `--surface` |
+| `QuantitySheet` | Photo + name + hint. **count:** stepper + chips · **weight/volume:** chips (`250 g` `500 g` `1 kg`) + "Autre quantité" → numeric keypad · **pack:** segmented control of active packs + stepper. Green "Ajouter · 500 g". |
+| `Stepper` | 56 pt circles in `--fill`, green glyph, value in `--font-num` 44 pt |
+| `Chip` | 36–44 pt, `--fill` / selected `--green` with cream text |
+| `SegmentedControl` | `--fill` track, cream thumb with a soft shadow. Used for packs, **Accepter / Réduire / Refuser** (selected word takes the status text colour), and team choice. |
+| `Toggle` | 51 × 31, on = `--green` |
+| `Button` | **filled** `--green` / cream text · **tinted** `--green-tint` / `--green` text · **plain** green text · **destructive** `--refused-text` text or fill. Pressed: opacity .75, scale .98. No ripples. |
+| `StatusPill` | §2 |
+| `OrderCard` | `--surface`, status pill + time, order code, line count, progress bar (green for shop, prep indigo for owner/labo) |
+| `NoteBubble` | Owner/deputy note: `--warn-bg` block, `--warn-text`, author + time in `footnote`. On the tablet a new note pulses once. |
+| `HandoverScreen` | Full-screen, team theme preview. Two big team buttons → 4-digit keypad. Blocks the tablet until a team confirms. |
+| `Banner` | Top, rounded, translucent: "Commande envoyée", "La boutique a modifié la commande" |
+| `ShareButton` | `navigator.share({ text })`, fallback copy + banner |
+| `EmptyState` | Title + one sentence + one tinted button. No illustration. |
 
 ## 7. Motion & feedback
 
-- **Springs, not easings:** sheets and page pushes use spring physics (Motion library: `type: "spring", stiffness: 400, damping: 40`). Small state changes use 200 ms `cubic-bezier(.25,.1,.25,1)`.
-- **Navigation:** push slides in from the trailing edge (from the left in RTL), the previous page shifts 30% with dimming, as in UINavigationController. Swipe from the edge to go back (iOS PWAs need this implemented by hand).
-- **Add to cart:** a +1 badge pops (scale 1 → 1.2 → 1) on the cart bar.
-- **Send success:** the button morphs into a check, then a banner appears.
-- **Haptics:** `navigator.vibrate(10)` on Android. iOS Safari has no vibration API, so the visual feedback must be enough on its own.
-- `prefers-reduced-motion`: springs become 150 ms fades.
-- **Sounds:** owner/deputy "new order" chime. Labo alarm repeats every 10 s until acknowledged.
+- Springs (`stiffness 400, damping 40`) for sheets and pushes. 200 ms for small changes.
+- Add to cart: the card ring appears and the cart bar count bumps (scale 1 → 1.15 → 1).
+- Edge-swipe back implemented for the iOS PWA.
+- Haptics on Android only (`vibrate(10)`). iOS relies on visual feedback.
+- `prefers-reduced-motion`: fades only.
+- Sounds: new-order chime (owner/deputy), repeating labo alarm until acknowledged, short tone for a new owner note.
 
-## 8. PWA polish (what makes it feel installed, not "a website")
+## 8. PWA polish
 
-- `display: standalone`, `theme-color` matching `--bg-grouped`, `apple-mobile-web-app-status-bar-style: default`, splash screens for common iPhone sizes, a proper app icon (iOS rounding is applied by the OS).
-- No browser behaviour leaks: `-webkit-tap-highlight-color: transparent`, `user-select: none` on controls, `overscroll-behavior-y: contain` on scroll containers, no pull-to-refresh inside sheets.
-- Inputs ≥ 16 px (otherwise iOS zooms on focus). Correct `inputmode="numeric"` for quantities and PINs.
-- Skeleton rows (grey rounded blocks) while loading, never a full-screen spinner.
+`display: standalone`, `theme-color: #F3EDE2` (labo night: `#12161F`), iOS splash screens, a proper icon in brand green. No tap highlight, no text selection on controls, `overscroll-behavior: contain`. Inputs ≥ 16 px. Skeleton cards in `--fill` while loading.
 
 ## 9. Content & tone
 
-- Short, concrete, imperative. "Envoyer la commande", not "Soumettre".
-- **No ambiguous verbs.** Before a label ships, ask: "could a tired manager misread this?" ("Recommander" was rejected for this reason.)
-- Errors say what happened and what to do: "Pas de connexion. La commande sera envoyée automatiquement."
-- Never show technical terms (UUID, sync, RPC, 409).
+Short and concrete. No ambiguous verbs ("Recommander" was rejected). Errors say what happened and what to do. No technical terms.
 
-## 10. Accessibility checklist (per screen, before merge)
+## 10. Accessibility checklist
 
-- [ ] Targets meet §5 sizes
-- [ ] Text uses `-text` status values on light backgrounds (≥ 4.5:1)
-- [ ] Status shown with icon + text
-- [ ] Correct in `dir="rtl"` (ar) and `dir="ltr"` (fr) at 360 px width
-- [ ] Usable at 200% text size
+- [ ] Targets meet §5
+- [ ] Text pairs from §2 only (all ≥ 4.5:1)
+- [ ] Status shown with a word, never colour alone
+- [ ] RTL (ar) and LTR (fr) at 360 px; labo at 1024 × 768 in **both** team themes
+- [ ] 200% text size usable
 - [ ] Icon-only buttons have `aria-label` in both languages
-- [ ] Light mode verified (dark mode once P1 ships)

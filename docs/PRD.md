@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft v0.2 — owner answers integrated; 4 questions still open (see §12) |
+| Status | Draft v0.3 — all owner questions answered (see §12) |
 | Last updated | 2026-11-25 |
 | Scope | V1 (pilot → 12 shops) |
 
@@ -46,7 +46,7 @@ These targets are **assumptions** set to steer design. Replace them with real nu
 |---|---|---|---|
 | **Shop** (×12) | Shop manager, sometimes other staff | Their own Android phone, sometimes iPhone | Low patience and low tech literacy. Busy, standing, one hand free. Will drop back to WhatsApp at the first friction. Arabic first, product names often in French. |
 | **Owner** (×1) | The owner | Phone (+ PC sometimes) | Every order passes through him. Needs speed, batch actions and reliable notifications. Manages the catalog. |
-| **Deputy** (×1+) | Owner's backup | Phone | Validates orders when the owner is unavailable (asleep, travelling). Same review powers, no catalog or account admin. |
+| **Deputy** (×1) | Owner's backup | Phone | Validates orders when the owner is unavailable (asleep, travelling). Same review powers, no catalog or account admin. |
 | **Labo** (×2 teams) | Morning team, night team | **One shared tablet**, always on, in a kitchen | Wet or floured hands, noise, gloves. Night shift crosses midnight. The owner must know which team did what. |
 
 Full permissions are in [ROLES.md](./ROLES.md).
@@ -103,7 +103,7 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | SHP-7 | Sending is **idempotent**: a double tap, a retry or a flaky network can never create two orders. | P0 |
 | SHP-8 | Sending while offline queues the order and sends it automatically when the connection returns. The UI says so clearly ("En file d'attente — sera envoyée"). | P0 |
 | SHP-10 | Favourites / "souvent commandés" row at the top of the home screen, computed from the shop's history. | P1 |
-| SHP-11 | Edit or cancel the order while it is still `submitted` (the owner hasn't opened it). Once the owner opens it, it is locked. | P1 |
+| SHP-11 | Edit or cancel the order **until it is sent to the labo** (`submitted` or `in_review`). If the owner is reviewing it at that moment, his screen refreshes with a banner "La boutique a modifié la commande". Changed lines are highlighted and his decisions on those lines reset. Unchanged lines keep their decisions. | P0 |
 | SHP-12 | **"Partager"** fallback: send the cart or an order as compact plain text through the phone's share sheet (WhatsApp, SMS…), with copy to clipboard as backup. Works offline, because the cart is on the device. | P0 |
 
 ### 6.3 Tracking (Shop)
@@ -127,7 +127,7 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | OWN-3 | Opening an order sets it to `in_review`, which locks shop edits. | P0 |
 | OWN-4 | For each line: **Accepter** (default) / **Réduire** (stepper using the same quantity control) / **Refuser** (preset reasons + free text). | P0 |
 | OWN-5 | **"Tout accepter"**: every line is accepted unless the owner touched it. This is the fast path for the common case. | P0 |
-| OWN-6 | Optional note for the labo (per order) and optional note for the shop. | P0 |
+| OWN-6 | Optional notes: for the labo **per order and per line** (e.g. "Chantilly bien ferme"), and for the shop. | P0 |
 | OWN-7 | Assign the order to a labo team. The default comes from the current time against the team schedules, and the owner can override it. | P0 |
 | OWN-8 | If every line is refused, the order becomes `refused` and is never sent to the labo. | P0 |
 | OWN-9 | Live board of orders being prepared: progress (x/y lines), assigned team, elapsed time. | P0 |
@@ -135,6 +135,7 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | OWN-11 | Manage the preset refusal reasons (e.g. "Rupture", "Quantité trop élevée", "Pas aujourd'hui"). | P1 |
 | OWN-12 | Cancel a validated order that the labo has not started yet, with a reason. | P1 |
 | OWN-13 | **"Partager"** a validated order as plain text (share sheet / copy) to paste into the labo WhatsApp group if the tablet is down. Only approved quantities and the labo note are included. | P0 |
+| OWN-15 | After validation the owner **cannot change quantities**, but can **add notes** (per order or per line) until the order is ready. Notes are append-only. The tablet highlights each new note and plays a short sound. | P1 |
 | OWN-14 | **Deputy** account with the same review powers (§6.4). New-order notifications go to the owner and the deputy. Whoever opens an order first locks it, and the other sees "En revue par ‹nom›". Every decision records which person made it. | P1 |
 
 ### 6.5 History (Owner, Deputy)
@@ -152,14 +153,14 @@ The owner keeps entering orders into his PC database himself, so V1 has **no exp
 | ID | Requirement | P |
 |---|---|---|
 | LAB-1 | Tablet stays logged in. The screen stays awake (Wake Lock API). | P0 |
-| LAB-2 | **Active team** selector ("Équipe matin" / "Équipe nuit"). Suggested from the schedule, confirmed with one tap at shift start. Every labo action is stamped with the team. | P0 |
+| LAB-2 | **Team handover system.** Two teams, each with its own fixed look: **Matin** = light sand theme, **Nuit** = dark theme. A team can be told apart from across the kitchen, and the owner can tell them apart in the trail. At **04:00 and 16:00** the tablet shows a full-screen **"Passation"** that blocks every action until the incoming team taps its name and enters its **4-digit team PIN**. Every action is stamped with the active team. The owner sees a Matin/Nuit badge on each order and each ticked line. An order started by one team and finished by the other shows both. | P0 |
+| LAB-2b | Early or late handover: a "Changer d'équipe" button (same PIN screen) for overlaps. Each switch is an audited event. | P0 |
 | LAB-3 | The labo sees only validated orders, with the shop name, the owner's note, and the approved quantities. Refused lines are hidden. | P0 |
 | LAB-4 | New order: a loud repeating sound until someone acknowledges it, plus a visual flash. | P0 |
 | LAB-5 | Tick a line as done: a large target (≥ 64 px) that can be undone. The first tick moves the order to `in_preparation`. | P0 |
 | LAB-6 | Mark a line as *partiel* (with the prepared qty) or *non fait*. A note is **required** for both. | P0 |
 | LAB-7 | **"Clôturer"** the order. Possible only once every line is resolved (done / partial / not done). Asks for confirmation. | P0 |
 | LAB-8 | Ticks made offline are queued and replayed safely: the same action applied twice gives the same result. | P0 |
-| LAB-9 | Optional: pick the preparer's name from the team list for each action. | P2 |
 | LAB-10 | Optional: print a paper ticket (keeps the register habit during the transition). | P2 |
 
 ## 7. Quantity model
@@ -188,14 +189,19 @@ A cart can hold the same `pack` product twice with different variants (e.g. 2 ×
 5. **Optimistic concurrency:** each order has a `version`. A stale write is rejected and the UI re-fetches. No silent overwrite.
 6. **Local durability:** carts and pending actions are saved in IndexedDB until the server confirms them.
 7. **Backups:** daily automated backups plus point-in-time recovery in production.
-8. **Retention:** the app *shows* 30 days, but the database *keeps* every order. At this volume that is a few tens of MB per year (estimate: 12 shops × ~3 orders × ~10 lines per day). Deleting is irreversible and saves nothing meaningful, so no automatic purge (see Q10).
+8. **Retention: 30 days, then deleted** (owner's decision, to stay within the free database). A nightly job (03:00 Algiers, just before the business day starts) deletes orders whose `business_date` is more than 30 days old **and** whose status is final (`received`, `ready`, `refused`, `cancelled`), together with their lines, notes and events. An order that is still open is never deleted. Each run writes a count to `purge_runs`.
+   *Sizing (estimate, corrected):* my earlier "tens of MB per year" left out the event log and indexes. A better estimate is ~0.5–1 MB per day all-in (≈ 36 orders, 360 lines and ~900 events per day). That means ~200–350 MB per year without a purge, and **~20–30 MB** with the 30-day purge. So the purge keeps you far below the limit.
+9. **Backup on the free tier:** the free tier keeps no backups, which conflicts with "no data lost". A nightly GitHub Action runs `pg_dump` and stores the file as a private artifact for 30 days. It costs nothing and covers the window the app keeps anyway. (P1, needs the database URL saved as a GitHub secret.)
 
 ## 9. Order state machine
 
 ```mermaid
 stateDiagram-v2
     [*] --> submitted: shop sends
+    submitted --> submitted: shop edits (version + 1)
+    in_review --> in_review: shop edits (changed lines reset)
     submitted --> cancelled: shop cancels
+    in_review --> cancelled: shop cancels
     submitted --> in_review: owner opens
     in_review --> submitted: owner closes without deciding (lock released)
     in_review --> validated: ≥1 line accepted
@@ -233,6 +239,7 @@ How each state appears to the shop:
 | Accessibility | Touch targets ≥ 48 px (≥ 64 px on the labo tablet). Contrast ≥ 4.5:1. Status never shown by colour alone. |
 | Security | Row-level security on every table. Each shop can see only its own orders. The labo cannot see refused lines or other shops' notes to the owner. |
 | Availability | Hosted on managed services. No self-managed servers in V1. |
+| Hosting tier | **Supabase free tier** at launch (owner's choice). Limits to respect (verify current values): ~500 MB database, ~1 GB file storage, no automatic backups, project pauses after 7 days without activity (not an issue with daily use). Hence: the 30-day purge (§8.8), compressed photos (≤ 200 KB), and the nightly backup (§8.9). |
 
 ## 11. Release plan
 
@@ -258,6 +265,12 @@ How each state appears to the shop:
 | Q5 | Language | **Arabic + French.** Arabic default for shops and labo, French for the owner. |
 | Q6 | Owner backup | **Yes, a deputy role** (OWN-14). |
 | Q9 | Devices | **Every user installs the PWA on their own phone.** |
+| Q1 | Several orders a day? | **Yes.** |
+| Q4 | Unavailable products | **Greyed out** with "Indisponible". |
+| Q7 | Changing an order | **The shop** can edit until the order goes to the labo (SHP-11). **The owner** never changes quantities after validation, but can add notes (OWN-15). |
+| Q8 | Who prepared? | **Team only**, with the handover system (LAB-2). No individual names. |
+| Q10 | Old data | **Deleted after 30 days** (free-tier space), plus a nightly backup (§8). |
+| Q11 | Deputies | **One deputy**, who can switch products and packs on and off. |
 | — | "Recommander" button | **Dropped.** The label was ambiguous ("clear and reorder?"). The "souvent commandés" row (SHP-10) stays. |
 | — | Export to the owner's PC | **Dropped.** The owner keeps entering the data himself. The app shows 30 days of history. |
 | — | WhatsApp fallback | **"Partager" button** (SHP-12, OWN-13) instead of parallel WhatsApp ordering. |
@@ -266,9 +279,6 @@ How each state appears to the shop:
 
 | # | Question | Default if no answer |
 |---|---|---|
-| Q1 | Can a shop send several orders a day, or one order per shift? | Several allowed. The UI warns if one is already pending. |
-| Q4 | Unavailable product: show it greyed out, or hide it completely? | Greyed out with "Indisponible" (fewer "why can't I find X" calls). |
-| Q7 | After validation, can the owner change an order (add a forgotten line)? | V1: no. He cancels (if not started) or adds a note. |
-| Q8 | Does the labo need to record *who* prepared, or is the team enough? | Team is enough. Individual names are P2. |
-| Q10 | Should data older than 30 days be deleted, or only hidden in the app? | Hidden only. Kept in the database. |
-| Q11 | How many deputies, and should a deputy be able to switch products/packs on and off? | 1 deputy, who can toggle availability but not edit products. |
+| Q12 | Exact brand green and beige (logo file or hex codes)? | Provisional palette in DESIGN_SYSTEM.md |
+| Q13 | Shift times 04:00 / 16:00: confirmed? | Yes |
+| Q14 | Who sets the team PINs, and how often do they change? | The owner sets them and changes them when someone leaves |
