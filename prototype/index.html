@@ -1,0 +1,638 @@
+<title>Mahroussa Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: prototype controls on top, one device frame (phone or tablet) holding the live app. */
+:root{
+  --page:#E2D6BE; --page-fg:#1A3524; --bar:#F5EFE3;
+  /* brand */
+  --sage:#6BAA75; --sage-soft:#86C08F; --sage-mid:#478153; --sage-deep:#2B6540;
+  --ink:#1A3524; --ink-deep:#0F2117; --ink-soft:#275238;
+  --cream:#F5EFE3; --paper:#ECE3D0; --paper-deep:#E2D6BE; --wood:#B47C4E; --blush:#E7C3BC;
+  --muted:#4E6455; --line:rgba(26,53,36,.12);
+  --font:"Readex Pro","IBM Plex Sans Arabic",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0F2117;--page-fg:#F5EFE3;--bar:#1A3524;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0F2117;--page-fg:#F5EFE3;--bar:#1A3524;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--page);color:var(--page-fg);font-family:var(--font);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--sage);outline-offset:2px}
+input,textarea,select{font:inherit;font-size:16px;color:var(--ink)}
+.num{font-variant-numeric:tabular-nums}
+[dir=rtl] .flip{transform:scaleX(-1)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* stage */
+.stage{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:12px;padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;max-width:100%}
+.seg{display:flex;background:var(--bar);border-radius:999px;padding:4px;gap:2px;border:1px solid rgba(26,53,36,.14)}
+.seg button{height:36px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:500;color:var(--page-fg);display:flex;align-items:center;gap:6px;position:relative}
+.seg button[aria-pressed=true]{background:var(--sage-deep);color:#F5EFE3}
+.cnt{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#C8473B;color:#fff;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.ghost{height:36px;padding:0 12px;border-radius:999px;font-size:13px;color:var(--page-fg);opacity:.75;border:1px solid rgba(127,127,127,.35)}
+
+.device{position:relative;width:390px;max-width:100%;height:min(820px,calc(100dvh - 96px));min-height:560px;border-radius:46px;overflow:hidden;border:9px solid #0F2117;box-shadow:0 30px 80px rgba(15,33,23,.35);background:var(--paper);color:var(--ink)}
+.device.tablet{width:1080px;height:min(740px,calc(100dvh - 96px));border-radius:30px}
+@media (max-width:540px){.stage{padding:0;gap:0}.pbar{padding:8px 8px 6px}.device,.device.tablet{width:100%;height:calc(100dvh - 58px);min-height:0;border-radius:0;border:0;box-shadow:none}}
+
+/* app shell */
+.app{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--paper)}
+.hdr{background:var(--ink);color:var(--cream);padding:18px 16px 14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.hrow{display:flex;align-items:center;gap:10px;min-height:44px}
+.eyebrow{font-size:13px;color:var(--sage-soft);font-weight:500}
+.ttl{font-size:27px;line-height:32px;font-weight:600;letter-spacing:-.3px;margin:0}
+.ibtn{width:42px;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .12s}
+.ibtn:active{transform:scale(.92)}
+.hdr .ibtn{background:rgba(245,239,227,.1);color:var(--cream)}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{height:36px;padding:0 15px;border-radius:18px;background:rgba(245,239,227,.1);color:var(--cream);font-size:14px;font-weight:500;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px;transition:background .15s}
+.chip[aria-pressed=true]{background:var(--sage);color:var(--ink)}
+.tabs{display:flex;background:var(--cream);border-top:1px solid var(--line);flex-shrink:0;padding-bottom:4px}
+.tab{flex:1;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500;color:var(--muted);position:relative}
+.tab[aria-pressed=true]{color:var(--sage-deep)}
+.tab[aria-pressed=true]::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--sage-deep)}
+.tab .cnt{position:absolute;top:7px;inset-inline-start:calc(50% + 6px)}
+
+/* product grid */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px 16px 110px;align-items:start}
+.card{background:var(--cream);border-radius:22px;padding:7px;display:flex;flex-direction:column;position:relative;transition:box-shadow .2s}
+.card.in{box-shadow:0 0 0 2px var(--sage-deep)}
+.art{aspect-ratio:1/1;max-width:100%;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:600;color:rgba(26,53,36,.5);letter-spacing:.5px;position:relative;overflow:hidden}
+.art::after{content:"";position:absolute;inset:auto -20% -45% -20%;height:70%;border-radius:50%;background:rgba(255,255,255,.28)}
+.pname{font-size:15px;font-weight:500;line-height:20px;padding:9px 5px 5px;min-height:49px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.add{position:absolute;inset-inline-end:14px;width:42px;height:42px;border-radius:21px;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(15,33,23,.25);transition:transform .12s}
+.add:active{transform:scale(.9)}
+.off{opacity:.42}
+.offtag{position:absolute;top:14px;inset-inline-start:14px;height:24px;padding:0 9px;border-radius:12px;background:var(--cream);font-size:12px;font-weight:600;display:flex;align-items:center;z-index:1}
+.step{display:flex;align-items:center;justify-content:space-between;height:42px;border-radius:21px;background:var(--ink);color:var(--cream);padding:0 3px}
+.step button{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.step button:active{background:rgba(245,239,227,.15)}
+.step .v{font-size:15px;font-weight:600}
+.step.light{background:var(--paper);color:var(--ink)}
+.packpill{height:42px;border-radius:21px;background:var(--ink);color:var(--cream);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px}
+.cartbar{position:absolute;inset-inline:12px;bottom:76px;height:58px;border-radius:29px;background:var(--ink);color:var(--cream);display:flex;align-items:center;gap:12px;padding:0 8px 0 8px;box-shadow:0 12px 30px rgba(15,33,23,.35);animation:rise .25s ease-out}
+.cartbar .n{width:42px;height:42px;border-radius:21px;background:var(--sage);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:600}
+@keyframes rise{from{transform:translateY(20px);opacity:0}}
+
+/* lists & cards */
+.pad{padding:16px 16px 28px;display:flex;flex-direction:column;gap:12px}
+.ocard{background:var(--cream);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;text-align:start;width:100%;position:relative}
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1;min-width:0}
+.code{font-size:18px;font-weight:600}
+.meta{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.pill{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:14px;font-size:13px;font-weight:600;white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:4px;display:block}
+.prog{height:6px;border-radius:3px;background:rgba(26,53,36,.1);overflow:hidden}
+.prog b{display:block;height:100%;border-radius:3px;transition:width .3s}
+.group{background:var(--cream);border-radius:20px;overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:60px}
+.li+.li{border-top:1px solid var(--line)}
+.dot{width:30px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qty{font-size:16px;font-weight:600;white-space:nowrap}
+.strike{text-decoration:line-through;color:var(--muted);font-weight:400;font-size:13px}
+.lbtn{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;color:var(--muted);background:var(--paper);flex-shrink:0}
+.lbtn:active{transform:scale(.92)}
+.bubble{background:#F2E3CF;color:#6E4520;border-radius:14px;padding:9px 12px;font-size:14px;display:flex;gap:8px;align-items:flex-start}
+.foot{padding:12px 16px 14px;background:var(--cream);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.primary{height:54px;border-radius:16px;background:var(--sage-deep);color:var(--cream);font-size:17px;font-weight:600;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,background .15s}
+.primary:active{transform:scale(.98);background:var(--ink)}
+.primary:disabled{background:var(--paper-deep);color:#8C8270}
+.primary.danger{background:#9B2C1F}
+.empty{padding:70px 24px;text-align:center;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:12px;font-size:15px}
+.empty .ec{width:64px;height:64px;border-radius:32px;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--sage-mid)}
+.banner{display:flex;align-items:center;gap:10px;background:var(--sage);color:var(--ink);padding:10px 14px;font-size:14px;font-weight:500}
+.steps{display:flex;align-items:flex-start;padding:16px 8px 4px}
+.stp{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;font-size:12px;color:var(--muted);text-align:center}
+.stp::before{content:"";position:absolute;top:8px;inset-inline-start:-50%;width:100%;height:2px;background:var(--paper-deep);z-index:0}
+.stp:first-child::before{display:none}
+.stp.on::before{background:var(--sage-mid)}
+.stp .c{width:18px;height:18px;border-radius:9px;background:var(--paper-deep);z-index:1;border:3px solid var(--cream)}
+.stp.on .c{background:var(--sage-mid)}
+.stp.now .c{background:var(--sage-deep);box-shadow:0 0 0 4px rgba(107,170,117,.35)}
+.stp.on{color:var(--ink);font-weight:500}
+
+/* sheet */
+.scrim{position:absolute;inset:0;background:rgba(15,33,23,.45);z-index:40;animation:fade .2s}
+.sheet{position:absolute;inset-inline:0;bottom:0;z-index:41;background:var(--cream);border-radius:26px 26px 0 0;padding:8px 18px 20px;display:flex;flex-direction:column;gap:16px;max-height:92%;overflow:auto;animation:up .28s cubic-bezier(.2,.9,.25,1)}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(26,53,36,.2);align-self:center}
+@keyframes up{from{transform:translateY(100%)}}
+@keyframes fade{from{opacity:0}}
+.sh-t{font-size:21px;font-weight:600;margin:0}
+.segc{display:flex;background:var(--paper);border-radius:14px;padding:4px;gap:4px}
+.segc button{flex:1;height:44px;border-radius:11px;font-size:15px;font-weight:500;color:var(--muted)}
+.segc button[aria-pressed=true]{background:var(--cream);color:var(--ink);font-weight:600;box-shadow:0 2px 8px rgba(26,53,36,.12)}
+.bigstep{display:flex;align-items:center;justify-content:space-between;padding:4px 10px}
+.bigstep button{width:60px;height:60px;border-radius:30px;background:var(--paper);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.bigstep .v{font-size:38px;font-weight:600}
+.rchips{display:flex;flex-wrap:wrap;gap:8px}
+.rchip{height:40px;padding:0 16px;border-radius:20px;background:var(--paper);font-size:15px;font-weight:500}
+.rchip[aria-pressed=true]{background:var(--ink);color:var(--cream)}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
+.field input,.field select,.field textarea,.tin{height:48px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 12px;width:100%}
+.field textarea,.tin.area{height:auto;min-height:76px;padding:12px;resize:none}
+.sw{width:51px;height:31px;border-radius:16px;background:var(--paper-deep);position:relative;flex-shrink:0;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:inset-inline-start .2s}
+.sw[aria-checked=true]{background:var(--sage-deep)}
+.sw[aria-checked=true]::after{inset-inline-start:22px}
+.toast{position:absolute;top:14px;inset-inline:16px;z-index:60;background:var(--ink);color:var(--cream);border-radius:16px;padding:13px 16px;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500;box-shadow:0 10px 30px rgba(15,33,23,.35);animation:drop .3s ease-out}
+@keyframes drop{from{transform:translateY(-30px);opacity:0}}
+
+/* labo */
+.labo{position:absolute;inset:0;display:flex;flex-direction:column;--lb:#ECE3D0;--lc:#F5EFE3;--lt:#1A3524;--lm:#4E6455;--ll:rgba(26,53,36,.12);--lh:#DCCBA4;--lht:#3E3013;background:var(--lb);color:var(--lt)}
+.labo.nuit{--lb:#0F2117;--lc:#1A3524;--lt:#F5EFE3;--lm:#A9BBA9;--ll:rgba(245,239,227,.1);--lh:#275238;--lht:#F5EFE3}
+.lhdr{height:84px;flex-shrink:0;background:var(--lh);color:var(--lht);display:flex;align-items:center;gap:14px;padding:0 22px}
+.lgrid{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;padding:20px 22px;align-content:start}
+.lcard{background:var(--lc);border-radius:22px;display:flex;flex-direction:column;overflow:hidden}
+.lcard.new{box-shadow:0 0 0 3px var(--wood)}
+.lline{display:flex;align-items:center;gap:12px;min-height:66px;padding:8px 10px 8px 14px;border-top:1px solid var(--ll);text-align:start;width:100%}
+.ck{width:44px;height:44px;border-radius:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2.5px var(--lm);color:#fff;transition:transform .15s}
+.lline:active .ck{transform:scale(.9)}
+.lname{font-size:19px;font-weight:500;line-height:24px}
+.lqty{font-size:20px;font-weight:600}
+.ldone .lname,.ldone .lqty{color:var(--lm);text-decoration:line-through}
+.lmore{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:var(--lm)}
+.lclose{margin:12px 14px 14px;height:62px;border-radius:16px;background:var(--sage-deep);color:#F5EFE3;font-size:19px;font-weight:600}
+.lclose:disabled{background:var(--ll);color:var(--lm)}
+.alarm{height:50px;padding:0 20px;border-radius:25px;background:var(--wood);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(180,124,78,.25)}}
+.hand{position:absolute;inset:0;z-index:70;background:#ECE3D0;color:#1A3524;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;padding:40px 48px;align-content:center}
+.team{height:132px;border-radius:24px;padding:0 26px;display:flex;align-items:center;gap:18px;text-align:start;font-size:24px;font-weight:600;width:100%}
+.key{height:66px;border-radius:18px;background:#F5EFE3;font-size:27px;font-weight:500}
+.key:active{background:#E2D6BE}
+.pd{width:18px;height:18px;border-radius:9px;box-shadow:inset 0 0 0 2px #8C8270}
+.pd.f{background:#2B6540;box-shadow:none}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media (max-width:760px){.hand{grid-template-columns:1fr;padding:20px;gap:18px;overflow:auto;align-content:start}.team{height:84px}.lhdr{height:auto;flex-wrap:wrap;padding:12px 16px}.lgrid{grid-template-columns:1fr;padding:14px}}
+</style>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState,useEffect,useMemo,useRef}=React;
+const html=htm.bind(React.createElement);
+
+/* ---------- icons (functional only) ---------- */
+const IP={plus:'M12 5v14|M5 12h14',minus:'M5 12h14',pen:'M12 20h9|M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z',x:'M18 6 6 18|M6 6l12 12',
+trash:'M3 6h18|M8 6V4h8v2|M19 6l-1 14H6L5 6',note:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',check:'m5 12 5 5L20 7',
+back:'m15 18-6-6 6-6',fwd:'m9 18 6-6-6-6',search:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z|m21 21-4.3-4.3',share:'M12 3v12|m8 7 4-4 4 4|M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7',
+bag:'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z|M3 6h18|M16 10a4 4 0 0 1-8 0',list:'M8 6h13|M8 12h13|M8 18h13|M3 6h.01|M3 12h.01|M3 18h.01',
+inbox:'M22 12h-6l-2 3h-4l-2-3H2|M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z',
+fire:'M12 3v3|M12 18v3|M5.6 5.6l2.1 2.1|M16.3 16.3l2.1 2.1|M3 12h3|M18 12h3|M5.6 18.4l2.1-2.1|M16.3 7.7l2.1-2.1',grid:'M3 3h7v7H3z|M14 3h7v7h-7z|M14 14h7v7h-7z|M3 14h7v7H3z',
+users:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2|M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z|M22 21v-2a4 4 0 0 0-3-3.87|M16 3.13a4 4 0 0 1 0 7.75',
+undo:'M3 7v6h6|M21 17a9 9 0 0 0-15-6.7L3 13',more:'M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z|M19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z|M5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
+bell:'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9|M10.3 21a1.94 1.94 0 0 0 3.4 0',box:'M21 8 12 3 3 8v8l9 5 9-5z|M3 8l9 5 9-5|M12 13v8',
+clock:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M12 7v5l3 2',moon:'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z',
+sun:'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z|M12 2v2|M12 20v2|M4.9 4.9l1.4 1.4|M17.7 17.7l1.4 1.4|M2 12h2|M20 12h2|M4.9 19.1l1.4-1.4|M17.7 6.3l1.4-1.4',
+ban:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M5.7 5.7l12.6 12.6',del:'M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z|M18 9l-6 6|M12 9l6 6'};
+function Icon({n,s=22,w=2,cls}){return html`<svg className=${cls} width=${s} height=${s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth=${w} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">${IP[n].split('|').map((d,i)=>html`<path key=${i} d=${d}/>`)}</svg>`}
+
+/* ---------- data ---------- */
+const CATS=[['glaces','Glaces','مثلجات','#D3E6CF'],['crepes','Crêpes','كريب','#EAD5BE'],['kachtouta','Kachtouta','كشطوطة','#EFD2CB'],['patisserie','Pâtisserie','حلويات','#E6D8BF'],
+['pizza','Pizza','بيتزا','#EDCDB8'],['jus','Jus','عصير','#E4E2BC'],['fruits','Fruits','فواكه','#D8E7C9'],['supplements','Suppléments','إضافات','#E0D3B8'],['ingredients','Ingrédients','مكونات','#D5E1CD'],['emballage','Emballage','تغليف','#DCD5C6']];
+const TINT=Object.fromEntries(CATS.map(c=>[c[0],c[3]]));
+const SHOPS={madania:['El Madania','المدنية','EMD'],kouba:['Kouba','القبة','KOU'],rouiba:['Rouiba','الرويبة','ROU'],kitani:['Kitani','الكيتاني','KIT'],boulevard:['Boulevard','البولفار','BOU']};
+const pk=(...a)=>a.map(l=>({id:l.replace(/\s/g,'').toLowerCase(),label:l,active:true}));
+const P0=[
+ ['cornet','glaces','Cornet','كورني','count',10],['chantilly','glaces','Crème chantilly','كريمة شانتي','pack',1,pk('5 L','10 L')],['vanille','glaces','Bac vanille','علبة فانيلا','pack',1,pk('5 L')],
+ ['choco','glaces','Bac chocolat','علبة شوكولا','pack',1,pk('5 L')],['bpist','glaces','Bac pistache','علبة فستق','pack',1,pk('5 L')],['sorbet','glaces','Sorbet citron','سوربيه ليمون','pack',1,pk('5 L'),false],
+ ['pcrepe','crepes','Pâte à crêpe','عجينة كريب','volume',1000],['nutella','crepes','Nutella','نوتيلا','weight',500],['crepen','crepes','Crêpe nature','كريب سادة','count',10],
+ ['kfraise','kachtouta','Kachtouta fraise','كشطوطة فراولة','count',5],['kmangue','kachtouta','Kachtouta mangue','كشطوطة مانجو','count',5],
+ ['tarte','patisserie','Tarte aux fruits','تارت فواكه','count',1],['mille','patisserie','Mille-feuille','ميلفاي','count',6],['eclair','patisserie','Éclair','إكلير','count',6],
+ ['ppizza','pizza','Pâte à pizza','عجينة بيتزا','count',10],['tomate','pizza','Sauce tomate','صلصة طماطم','pack',1,pk('1 L','5 L')],['fromage','pizza','Fromage râpé','جبن مبشور','weight',500],
+ ['orange','jus','Jus d’orange','عصير برتقال','pack',1,pk('1 L','5 L')],['citron','jus','Citronnade','ليموناضة','pack',1,pk('5 L')],
+ ['fraises','fruits','Fraises','فراولة','weight',500],['bananes','fruits','Bananes','موز','weight',1000],['mangue','fruits','Mangue','مانجو','weight',1000],
+ ['schoco','supplements','Sauce chocolat','صلصة شوكولا','pack',1,pk('1 L')],['amandes','supplements','Amandes','لوز','weight',250],
+ ['pistache','ingredients','Pistache','فستق','weight',250],['noisette','ingredients','Noisette','بندق','weight',250],['sucre','ingredients','Sucre','سكر','weight',1000],['lait','ingredients','Lait','حليب','volume',1000],
+ ['gobelets','emballage','Gobelets','أكواب','pack',1,pk('×50')],['boites','emballage','Boîtes pâtisserie','علب حلويات','count',10]
+].map(([id,cat,fr,ar,mode,step,packs,active])=>({id,cat,fr,ar,mode,step,packs:packs||[],active:active!==false}));
+const PINS={matin:'1111',nuit:'2222'};
+const now=()=>Date.now(), MIN=60000;
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));
+const teamByHour=()=>{const h=new Date().getHours();return h>=4&&h<16?'matin':'nuit'};
+
+/* ---------- i18n ---------- */
+const T={fr:{order:'Commander',orders:'Commandes',cart:'Panier',send:'Envoyer',update:'Mettre à jour',all:'Tout',usual:'Habituels',search:'Rechercher un produit',
+unav:'Indisponible',ok:'OK',editing:'Modification',inbox:'À valider',live:'En cours',catalog:'Catalogue',toLabo:'Envoyer au labo',refuseAll:'Refuser la commande',
+close:'Clôturer',partial:'Partiel',notDone:'Non fait',save:'Enregistrer',newProduct:'Nouveau produit',nameFr:'Nom (français)',nameAr:'Nom (arabe)',category:'Catégorie',
+type:'Type',step:'Pas',packs:'Packs',addPack:'Ajouter un pack',modes:{count:'Pièce',weight:'Poids',volume:'Volume',pack:'Pack'},matin:'Matin',nuit:'Nuit',
+handover:'Passation',who:'Qui commence ?',wrong:'Code incorrect',demo:'Démo : Matin 1111 · Nuit 2222',newOrder:'Nouvelle',sent:'Commande envoyée',updated:'Commande modifiée',
+noteLabo:'Note pour le labo',noteShop:'Note pour le patron',emptyCart:'Panier vide',nothing:'Rien à valider',nothingLive:'Rien en cours',noOrders:'Aucune commande',
+edited:'Modifiée par la boutique',received:'Reçu',shop:'Boutique',owner:'Patron',labo:'Labo',reset:'Réinitialiser',sim:'Simuler 16:00',since:'depuis',
+st:{submitted:'En attente',in_review:'En attente',validated:'Acceptée',in_preparation:'En préparation',ready:'Prête',received:'Reçue',refused:'Refusée',cancelled:'Annulée'},
+steps:['Envoyée','Acceptée','Préparation','Prête'],reasons:['Rupture','Trop','Pas aujourd’hui'],lreasons:['Rupture','Pas le temps','Panne'],other:'Autre…',
+addNote:'Ajouter',validatedToast:'Envoyée au labo',refusedToast:'Commande refusée',closedToast:'Commande prête',noteToast:'Note envoyée au labo',copied:'Copié',
+ready:'Prêtes',min:'min',h:'h',lab:'Labo',done:'faits'},
+ar:{order:'اطلب',orders:'طلبياتي',cart:'السلة',send:'إرسال',update:'تحديث',all:'الكل',usual:'المعتاد',search:'ابحث عن منتج',
+unav:'غير متوفر',ok:'حسناً',editing:'تعديل',inbox:'للمراجعة',live:'قيد التنفيذ',catalog:'المنتجات',toLabo:'إرسال إلى اللابو',refuseAll:'رفض الطلبية',
+close:'إغلاق الطلبية',partial:'جزئي',notDone:'لم يُحضَّر',save:'حفظ',newProduct:'منتج جديد',nameFr:'الاسم (فرنسية)',nameAr:'الاسم (عربية)',category:'الفئة',
+type:'النوع',step:'الخطوة',packs:'العبوات',addPack:'إضافة عبوة',modes:{count:'قطعة',weight:'وزن',volume:'حجم',pack:'عبوة'},matin:'الصباح',nuit:'الليل',
+handover:'تسليم الفريق',who:'من يبدأ الآن؟',wrong:'رمز خاطئ',demo:'تجربة: الصباح 1111 · الليل 2222',newOrder:'جديدة',sent:'تم إرسال الطلبية',updated:'تم تعديل الطلبية',
+noteLabo:'ملاحظة للابو',noteShop:'ملاحظة للمسؤول',emptyCart:'السلة فارغة',nothing:'لا شيء للمراجعة',nothingLive:'لا شيء قيد التنفيذ',noOrders:'لا توجد طلبيات',
+edited:'عدّلتها المحل',received:'استلمت',shop:'المحل',owner:'المسؤول',labo:'اللابو',reset:'إعادة',sim:'محاكاة 16:00',since:'منذ',
+st:{submitted:'في الانتظار',in_review:'في الانتظار',validated:'مقبولة',in_preparation:'قيد التحضير',ready:'جاهزة',received:'مستلمة',refused:'مرفوضة',cancelled:'ملغاة'},
+steps:['أُرسلت','قُبلت','التحضير','جاهزة'],reasons:['نفاد','كمية كبيرة','ليس اليوم'],lreasons:['نفاد','لا وقت','عطل'],other:'أخرى…',
+addNote:'إضافة',validatedToast:'أُرسلت إلى اللابو',refusedToast:'رُفضت الطلبية',closedToast:'الطلبية جاهزة',noteToast:'أُرسلت الملاحظة',copied:'تم النسخ',
+ready:'جاهزة',min:'د',h:'س',lab:'اللابو',done:'منجزة'}};
+
+/* status look: each step its own colour */
+const ST={submitted:['#F2DFC9','#7A4A22','#B47C4E'],in_review:['#F2DFC9','#7A4A22','#B47C4E'],validated:['#DCEBD9','#2B6540','#6BAA75'],
+in_preparation:['#D6E7EA','#1F5E6B','#3E8A99'],ready:['#2B6540','#F5EFE3','#86C08F'],received:['#E2D6BE','#5A5243','#8F8470'],refused:['#F3D3CC','#9B2C1F','#D0574A'],cancelled:['#E2D6BE','#5A5243','#8F8470']};
+
+/* ---------- quantity (integers in base units) ---------- */
+const dec=x=>String(Math.round(x*100)/100).replace('.',',');
+function fq(mode,q,pack){if(mode==='pack')return `${pack} × ${q}`;if(mode==='weight')return q>=1000?`${dec(q/1000)} kg`:`${q} g`;if(mode==='volume')return q>=1000?`${dec(q/1000)} L`:`${q} ml`;return `${q}`}
+const nm=(o,lang)=>lang==='ar'&&o.ar?o.ar:o.fr;
+const initials=s=>s.replace(/[’']/g,' ').split(/\s+/).filter(w=>w.length>2||/^[A-ZÀ-Ý]/.test(w)).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+/* ---------- store ---------- */
+function mkLine(p,q,packId){const pack=packId?p.packs.find(k=>k.id===packId):null;
+ return {id:uid(),pid:p.id,fr:p.fr,ar:p.ar,cat:p.cat,mode:p.mode,step:p.mode==='pack'?1:p.step,pack:pack?pack.label:null,packId:packId||null,req:q,appr:q,decision:'accepted',reason:'',ownerNote:'',changed:false,prep:'todo',prepQty:null,laboNote:'',prepTeam:null}}
+function seed(){
+ const t=now(),P=id=>P0.find(p=>p.id===id),team=teamByHour();
+ const L=(id,q,pack,extra)=>Object.assign(mkLine(P(id),q,pack),extra||{});
+ const O=(shop,n,status,ago,lines,extra)=>Object.assign({id:uid(),shop,code:`${SHOPS[shop][2]}-${String(n).padStart(2,'0')}`,status,createdAt:t-ago*MIN,
+   at:{submitted:t-ago*MIN},lines,shopNote:'',labNote:'',notes:[],team:null,version:1,events:[{type:'submitted',at:t-ago*MIN,by:'shop'}]},extra||{});
+ return {v:3,role:'shop',lang:'fr',products:structuredClone(P0),cart:{editing:null,lines:[]},labo:{team,since:t-95*MIN,handover:false},notif:{shop:0,owner:2,labo:1},
+  orders:[
+   O('kouba',2,'submitted',6,[L('cornet',200),L('chantilly',2,'10l'),L('pistache',1000),L('ppizza',30)],{shopNote:'Chantilly urgente pour ce soir'}),
+   O('rouiba',1,'submitted',2,[L('orange',3,'5l'),L('kfraise',40),L('cornet',150)]),
+   O('boulevard',3,'validated',12,[L('crepen',50),L('nutella',1000),L('sucre',2000)],{team,newForLabo:true,at:{submitted:t-30*MIN,validated:t-12*MIN}}),
+   O('kitani',1,'in_preparation',41,[L('tarte',12,null,{prep:'done',prepTeam:team}),L('bananes',2000),L('schoco',4,'1l',{prep:'done',prepTeam:team})],
+     {team,labNote:'Tartes en premier',at:{submitted:t-70*MIN,validated:t-41*MIN,in_preparation:t-30*MIN}}),
+   O('madania',1,'ready',190,[L('cornet',200,null,{prep:'done'}),L('chantilly',1,'10l',{req:2,appr:1,decision:'reduced',prep:'done'}),
+     L('pistache',1000,null,{decision:'refused',reason:'Rupture',appr:0,prep:'done'}),L('ppizza',30,null,{prep:'done'})],
+     {at:{submitted:t-190*MIN,validated:t-180*MIN,in_preparation:t-160*MIN,ready:t-25*MIN},team}),
+   O('madania',0,'refused',1500,[L('mangue',2000,null,{decision:'refused',reason:'Pas aujourd’hui',appr:0})],{at:{submitted:t-1500*MIN,refused:t-1490*MIN}})
+  ]};
+}
+const KEY='mahroussa-proto-v3';
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===3)return s}catch(e){}return seed()}
+
+/* ---------- small components ---------- */
+function Pill({s,lang}){const c=ST[s];return html`<span className="pill" style=${{background:c[0],color:c[1]}}><i style=${{background:c[2]}}></i>${T[lang].st[s]}</span>`}
+function Art({p,size,lang}){const name=p.fr;return html`<div className="art" style=${{background:TINT[p.cat]||'#E2D6BE',fontSize:size?Math.round(size*.36):30,width:size,height:size,borderRadius:size?Math.round(size*.28):undefined,flexShrink:0}}>${initials(name)}</div>`}
+function Sheet({onClose,children,label}){return html`<${React.Fragment}><div className="scrim" onClick=${onClose}></div><div className="sheet" role="dialog" aria-label=${label}><div className="grab"></div>${children}</div><//>`}
+function Toast({msg}){return msg?html`<div className="toast" role="status"><${Icon} n="check" s=${20}/>${msg}</div>`:null}
+function ago(ts,t){const m=Math.max(0,Math.round((now()-ts)/MIN));return m<60?`${m} ${t.min}`:`${Math.floor(m/60)} ${t.h}`}
+function hhmm(ts){return ts?new Date(ts).toTimeString().slice(0,5):''}
+function useToast(){const [m,setM]=useState(null);const r=useRef();const show=x=>{setM(x);clearTimeout(r.current);r.current=setTimeout(()=>setM(null),1800)};return [m,show]}
+function shareText(o,lang){const s=SHOPS[o.shop];const lines=o.lines.filter(l=>l.decision!=='refused').map(l=>`• ${nm(l,lang)} — ${fq(l.mode,l.appr||l.req,l.pack)}`);return `${nm({fr:s[0],ar:s[1]},lang)} · ${o.code}\n${lines.join('\n')}${o.labNote?`\n${o.labNote}`:''}`}
+async function copyShare(o,lang,toast){const txt=shareText(o,lang);try{await navigator.clipboard.writeText(txt);toast(T[lang].copied)}catch(e){toast(T[lang].copied)}}
+
+/* ================= SHOP ================= */
+function ShopApp({S,act,lang}){
+ const t=T[lang];const [tab,setTab]=useState('order');const [cat,setCat]=useState('all');const [q,setQ]=useState('');const [search,setSearch]=useState(false);
+ const [packFor,setPackFor]=useState(null);const [cartOpen,setCartOpen]=useState(false);const [detail,setDetail]=useState(null);const [toast,showToast]=useToast();
+ const mine=S.orders.filter(o=>o.shop==='madania');
+ const usual=useMemo(()=>new Set(mine.flatMap(o=>o.lines.map(l=>l.pid))),[S.orders]);
+ const prods=S.products.filter(p=>(cat==='all'||(cat==='usual'?usual.has(p.id):p.cat===cat))&&(!q||(p.fr+' '+p.ar).toLowerCase().includes(q.toLowerCase())));
+ prods.sort((a,b)=>(b.active-a.active));
+ const cl=S.cart.lines;const qOf=(pid,packId)=>{const l=cl.find(x=>x.pid===pid&&(x.packId||null)===(packId||null));return l?l.qty:0};
+ const inc=(p,packId,d)=>act(n=>{const c=n.cart.lines;const st=p.mode==='pack'?1:p.step;let l=c.find(x=>x.pid===p.id&&(x.packId||null)===(packId||null));
+   if(!l){if(d<0)return;l={key:uid(),pid:p.id,packId:packId||null,qty:0};c.push(l)}l.qty+=d*st;if(l.qty<=0)n.cart.lines=c.filter(x=>x!==l)});
+ const count=cl.length;
+ const submit=(note)=>{const editing=S.cart.editing;act(n=>{const lines=n.cart.lines.map(c=>{const p=n.products.find(x=>x.id===c.pid);return mkLine(p,c.qty,c.packId)});
+   if(editing){const o=n.orders.find(x=>x.id===editing);if(o&&['submitted','in_review'].includes(o.status)){const old=o.lines;
+     o.lines=lines.map(nl=>{const m=old.find(ol=>ol.pid===nl.pid&&ol.packId===nl.packId&&ol.req===nl.req);if(m)return m;nl.changed=o.status==='in_review';return nl});
+     o.shopNote=note;if(o.status==='in_review')o.edited=true;o.version++;o.events.push({type:'shop_edited',at:now(),by:'shop'});n.notif.owner++}}
+   else{const k=n.orders.filter(o=>o.shop==='madania').length+1;n.orders.unshift({id:uid(),shop:'madania',code:`EMD-${String(k).padStart(2,'0')}`,status:'submitted',createdAt:now(),at:{submitted:now()},
+     lines,shopNote:note,labNote:'',notes:[],team:null,version:1,events:[{type:'submitted',at:now(),by:'shop'}]});n.notif.owner++}
+   n.cart={editing:null,lines:[]}});setCartOpen(false);setTab('orders');setDetail(null);showToast(editing?t.updated:t.sent)};
+ const startEdit=o=>{act(n=>{n.cart={editing:o.id,lines:o.lines.map(l=>({key:uid(),pid:l.pid,packId:l.packId,qty:l.req}))}});setDetail(null);setTab('order')};
+ const editingOrder=S.cart.editing&&S.orders.find(o=>o.id===S.cart.editing);
+ const shopName=nm({fr:SHOPS.madania[0],ar:SHOPS.madania[1]},lang);
+
+ if(detail){const o=S.orders.find(x=>x.id===detail);if(o)return html`<div className="app"><${ShopDetail} o=${o} t=${t} lang=${lang} onBack=${()=>setDetail(null)} onEdit=${()=>startEdit(o)}
+   onCancel=${()=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='cancelled';x.at.cancelled=now();x.events.push({type:'cancelled',at:now(),by:'shop'})});setDetail(null)}}
+   onReceive=${()=>act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='received';x.at.received=now();x.events.push({type:'received',at:now(),by:'shop'})})} onShare=${()=>copyShare(o,lang,showToast)}/><${Toast} msg=${toast}/></div>`}
+
+ return html`<div className="app">
+  ${tab==='order'?html`<${React.Fragment}>
+   <header className="hdr">
+    <div className="hrow"><div className="sp"><div className="eyebrow">${shopName}</div><h1 className="ttl">${t.order}</h1></div>
+     <button className="ibtn" aria-label=${t.search} onClick=${()=>{setSearch(!search);setQ('')}}><${Icon} n=${search?'x':'search'}/></button></div>
+    ${search&&html`<input className="tin" autoFocus placeholder=${t.search} value=${q} onInput=${e=>setQ(e.target.value)} style=${{background:'rgba(245,239,227,.1)',border:0,color:'#F5EFE3'}} aria-label=${t.search}/>`}
+    <div className="chips" role="toolbar">
+     ${[['all',t.all],['usual',t.usual],...CATS.map(c=>[c[0],lang==='ar'?c[2]:c[1]])].map(([k,l])=>html`<button key=${k} className="chip" aria-pressed=${cat===k} onClick=${()=>setCat(k)}>${l}</button>`)}
+    </div>
+   </header>
+   ${editingOrder&&html`<div className="banner"><${Icon} n="pen" s=${18}/><span className="sp">${t.editing} · ${editingOrder.code}</span><button className="ibtn" style=${{width:32,height:32}} aria-label="x" onClick=${()=>act(n=>{n.cart={editing:null,lines:[]}})}><${Icon} n="x" s=${18}/></button></div>`}
+   <div className="body"><div className="grid">
+    ${prods.map(p=>{const isPack=p.mode==='pack';const lines=cl.filter(x=>x.pid===p.id);const qn=isPack?0:qOf(p.id);
+     return html`<div key=${p.id} className=${'card'+(lines.length?' in':'')}>
+      <div className=${p.active?'':'off'} style=${{display:'flex',flexDirection:'column'}}><${Art} p=${p}/><div className="pname">${nm(p,lang)}</div></div>
+      ${!p.active&&html`<span className="offtag">${t.unav}</span>`}
+      ${p.active&&(isPack?(lines.length?html`<button className="packpill num" onClick=${()=>setPackFor(p)}><bdi>${lines.map(l=>fq('pack',l.qty,p.packs.find(k=>k.id===l.packId)?.label)).join(' · ')}</bdi></button>`
+        :html`<button className="add" style=${{top:'calc(100% - 108px)'}} aria-label=${p.fr} onClick=${()=>setPackFor(p)}><${Icon} n="plus" w=${2.4}/></button>`)
+       :(qn?html`<div className="step"><button aria-label="-" onClick=${()=>inc(p,null,-1)}><${Icon} n=${qn<=p.step?'trash':'minus'} s=${18}/></button><bdi className="v num">${fq(p.mode,qn)}</bdi><button aria-label="+" onClick=${()=>inc(p,null,1)}><${Icon} n="plus" s=${18}/></button></div>`
+        :html`<button className="add" style=${{top:'calc(100% - 108px)'}} aria-label=${p.fr} onClick=${()=>inc(p,null,1)}><${Icon} n="plus" w=${2.4}/></button>`))}
+     </div>`})}
+   </div></div>
+   ${count>0&&html`<button className="cartbar" onClick=${()=>setCartOpen(true)}><span className="n num">${count}</span><span className="sp" style=${{textAlign:'start',fontSize:16,fontWeight:500}}>${t.cart}</span><span style=${{width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center'}}><${Icon} n="fwd" cls="flip"/></span></button>`}
+  <//>`:html`<${React.Fragment}>
+   <header className="hdr"><div className="hrow"><div className="sp"><div className="eyebrow">${shopName}</div><h1 className="ttl">${t.orders}</h1></div></div></header>
+   <div className="body"><div className="pad">
+    ${mine.length===0&&html`<div className="empty"><span className="ec"><${Icon} n="list"/></span>${t.noOrders}</div>`}
+    ${mine.map(o=>{const c=o.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;const editable=['submitted','in_review'].includes(o.status);
+     return html`<div key=${o.id} className="ocard" style=${o.status==='ready'?{boxShadow:'0 0 0 2px #2B6540'}:null}>
+      <button style=${{display:'flex',flexDirection:'column',gap:10,textAlign:'start'}} onClick=${()=>setDetail(o.id)} aria-label=${o.code}>
+       <div className="row"><${Pill} s=${o.status} lang=${lang}/><span className="sp"></span><span className="meta num">${hhmm(o.createdAt)}</span></div>
+       <div className="row"><span className="code num">${o.code}</span><span className="sp"></span><span className="meta num"><${Icon} n="box" s=${16}/>${o.lines.length}</span></div>
+       ${o.status==='in_preparation'&&html`<div className="prog"><b style=${{width:`${c.length?done/c.length*100:0}%`,background:'#3E8A99'}}></b></div>`}
+      </button>
+      ${editable&&html`<button className="lbtn" style=${{position:'absolute',top:12,insetInlineEnd:84}} aria-label=${t.editing} onClick=${()=>startEdit(o)}><${Icon} n="pen" s=${18}/></button>`}
+      ${o.status==='ready'&&html`<button className="primary" style=${{height:48}} onClick=${()=>act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='received';x.at.received=now();x.events.push({type:'received',at:now(),by:'shop'})})}><${Icon} n="check"/>${t.received}</button>`}
+     </div>`})}
+   </div></div>
+  <//>`}
+  <nav className="tabs">
+   <button className="tab" aria-pressed=${tab==='order'} onClick=${()=>setTab('order')}><${Icon} n="bag"/>${t.order}</button>
+   <button className="tab" aria-pressed=${tab==='orders'} onClick=${()=>setTab('orders')}><${Icon} n="list"/>${t.orders}${mine.some(o=>o.status==='ready')&&html`<span className="cnt">${mine.filter(o=>o.status==='ready').length}</span>`}</button>
+  </nav>
+  ${packFor&&html`<${PackSheet} p=${packFor} lang=${lang} qOf=${qOf} onDone=${(packId,qty)=>{act(n=>{const c=n.cart.lines;let l=c.find(x=>x.pid===packFor.id&&x.packId===packId);
+     if(qty<=0){n.cart.lines=c.filter(x=>x!==l);return}if(!l){l={key:uid(),pid:packFor.id,packId,qty:0};c.push(l)}l.qty=qty});setPackFor(null)}} onClose=${()=>setPackFor(null)}/>`}
+  ${cartOpen&&html`<${CartScreen} S=${S} t=${t} lang=${lang} inc=${inc} onBack=${()=>setCartOpen(false)} onSend=${submit} editing=${editingOrder}/>`}
+  <${Toast} msg=${toast}/>
+ </div>`;
+}
+
+function PackSheet({p,lang,qOf,onDone,onClose}){const t=T[lang];const packs=p.packs.filter(k=>k.active);const [sel,setSel]=useState(packs[0]?.id);const [qty,setQty]=useState(Math.max(1,qOf(p.id,packs[0]?.id)));
+ const pick=id=>{setSel(id);setQty(Math.max(1,qOf(p.id,id)))};
+ return html`<${Sheet} onClose=${onClose} label=${p.fr}>
+  <div className="row"><${Art} p=${p} size=${64}/><h2 className="sh-t sp">${nm(p,lang)}</h2><button className="lbtn" aria-label="x" onClick=${onClose}><${Icon} n="x" s=${18}/></button></div>
+  ${packs.length>1&&html`<div className="segc">${packs.map(k=>html`<button key=${k.id} className="num" aria-pressed=${sel===k.id} onClick=${()=>pick(k.id)}>${k.label}</button>`)}</div>`}
+  <div className="bigstep"><button aria-label="-" onClick=${()=>setQty(Math.max(0,qty-1))}><${Icon} n=${qty<=1?'trash':'minus'} s=${26}/></button><span className="v num">${qty}</span><button aria-label="+" onClick=${()=>setQty(qty+1)}><${Icon} n="plus" s=${26}/></button></div>
+  <button className="primary num" onClick=${()=>onDone(sel,qty)}><bdi>${qty>0?fq('pack',qty,packs.find(k=>k.id===sel)?.label):t.ok}</bdi></button>
+ <//>`}
+
+function CartScreen({S,t,lang,inc,onBack,onSend,editing}){const [note,setNote]=useState(editing?.shopNote||'');const [noteOpen,setNoteOpen]=useState(!!(editing&&editing.shopNote));
+ return html`<div className="app" style=${{zIndex:30,animation:'up .28s cubic-bezier(.2,.9,.25,1)'}}>
+  <header className="hdr"><div className="hrow"><button className="ibtn" aria-label="back" onClick=${onBack}><${Icon} n="back" cls="flip"/></button><h1 className="ttl sp" style=${{fontSize:22}}>${t.cart}${editing?` · ${editing.code}`:''}</h1>
+   <button className="ibtn" aria-label=${t.noteShop} aria-pressed=${noteOpen} onClick=${()=>setNoteOpen(!noteOpen)} style=${noteOpen||note?{background:'#6BAA75',color:'#1A3524'}:null}><${Icon} n="note"/></button></div></header>
+  <div className="body"><div className="pad">
+   ${noteOpen&&html`<textarea className="tin area" placeholder=${t.noteShop} value=${note} onInput=${e=>setNote(e.target.value)} aria-label=${t.noteShop}></textarea>`}
+   ${S.cart.lines.length===0?html`<div className="empty"><span className="ec"><${Icon} n="bag"/></span>${t.emptyCart}</div>`:html`<div className="group">
+    ${S.cart.lines.map(c=>{const p=S.products.find(x=>x.id===c.pid);const pack=p.packs.find(k=>k.id===c.packId);const st=p.mode==='pack'?1:p.step;
+     return html`<div key=${c.key} className="li"><${Art} p=${p} size=${48}/><div className="sp"><div style=${{fontSize:16,fontWeight:500}}>${nm(p,lang)}</div>${pack&&html`<div className="meta num">${pack.label}</div>`}</div>
+      <div className="step light" style=${{width:132}}><button aria-label="-" onClick=${()=>inc(p,c.packId,-1)}><${Icon} n=${c.qty<=st?'trash':'minus'} s=${18}/></button><bdi className="v num">${p.mode==='pack'?c.qty:fq(p.mode,c.qty)}</bdi><button aria-label="+" onClick=${()=>inc(p,c.packId,1)}><${Icon} n="plus" s=${18}/></button></div></div>`})}
+   </div>`}
+  </div></div>
+  <div className="foot"><button className="primary" disabled=${!S.cart.lines.length} onClick=${()=>onSend(note)}>${editing?t.update:t.send}<span className="num" style=${{opacity:.7}}>· ${S.cart.lines.length}</span></button></div>
+ </div>`}
+
+function LineState({l,shop}){ // icon circle for a line, from the shop's point of view
+ if(l.decision==='refused')return html`<span className="dot" style=${{background:'#F3D3CC',color:'#9B2C1F'}}><${Icon} n="x" s=${16} w=${2.6}/></span>`;
+ if(l.prep==='done')return html`<span className="dot" style=${{background:'#2B6540',color:'#F5EFE3'}}><${Icon} n="check" s=${16} w=${2.6}/></span>`;
+ if(l.prep==='partial')return html`<span className="dot" style=${{background:'#F2DFC9',color:'#7A4A22'}}><${Icon} n="minus" s=${16} w=${2.6}/></span>`;
+ if(l.prep==='not_done')return html`<span className="dot" style=${{background:'#F3D3CC',color:'#9B2C1F'}}><${Icon} n="ban" s=${16}/></span>`;
+ if(l.decision==='reduced')return html`<span className="dot" style=${{background:'#F2DFC9',color:'#7A4A22'}}><${Icon} n="pen" s=${15}/></span>`;
+ return html`<span className="dot" style=${{background:'var(--paper)',color:'var(--muted)'}}><${Icon} n="clock" s=${16}/></span>`}
+
+function Steps({o,t}){const keys=['submitted','validated','in_preparation','ready'];const order={submitted:0,in_review:0,validated:1,in_preparation:2,ready:3,received:3};const cur=order[o.status]??-1;
+ return html`<div className="steps">${keys.map((k,i)=>html`<div key=${k} className=${'stp'+(i<=cur?' on':'')+(i===cur?' now':'')}><span className="c"></span><span>${t.steps[i]}</span><span className="num" style=${{fontSize:11,opacity:.75}}>${hhmm(o.at[k])}</span></div>`)}</div>`}
+
+function ShopDetail({o,t,lang,onBack,onEdit,onCancel,onReceive,onShare}){const editable=['submitted','in_review'].includes(o.status);
+ return html`<${React.Fragment}>
+  <header className="hdr"><div className="hrow"><button className="ibtn" aria-label="back" onClick=${onBack}><${Icon} n="back" cls="flip"/></button><h1 className="ttl sp num" style=${{fontSize:22}}>${o.code}</h1>
+   <button className="ibtn" aria-label="share" onClick=${onShare}><${Icon} n="share"/></button>
+   ${editable&&html`<button className="ibtn" aria-label=${t.editing} onClick=${onEdit}><${Icon} n="pen"/></button><button className="ibtn" aria-label="cancel" onClick=${onCancel}><${Icon} n="trash"/></button>`}</div>
+   <div><${Pill} s=${o.status} lang=${lang}/></div></header>
+  <div className="body"><div className="pad">
+   ${o.status!=='refused'&&o.status!=='cancelled'&&html`<div className="group"><${Steps} o=${o} t=${t}/></div>`}
+   <div className="group">${o.lines.map(l=>html`<div key=${l.id} className="li"><${LineState} l=${l}/><div className="sp"><div style=${{fontSize:16,fontWeight:500,textDecoration:l.decision==='refused'?'line-through':'none'}}>${nm(l,lang)}</div>
+     ${l.reason&&html`<div style=${{fontSize:13,color:'#9B2C1F'}}>${l.reason}</div>`}${l.laboNote&&html`<div className="meta">${l.laboNote}</div>`}</div>
+     <div style=${{textAlign:'end'}}><bdi className="qty num" style=${l.decision==='refused'?{color:'var(--muted)'}:null}>${fq(l.mode,l.decision==='refused'?l.req:(l.prep==='partial'?l.prepQty:l.appr),l.pack)}</bdi>
+     ${(l.decision==='reduced'||l.prep==='partial')&&html`<div className="strike num"><bdi>${fq(l.mode,l.req,l.pack)}</bdi></div>`}</div></div>`)}</div>
+  </div></div>
+  ${o.status==='ready'&&html`<div className="foot"><button className="primary" onClick=${onReceive}><${Icon} n="check"/>${t.received}</button></div>`}
+ <//>`}
+
+/* ================= OWNER ================= */
+function OwnerApp({S,act,lang}){const t=T[lang];const [tab,setTab]=useState('inbox');const [open,setOpen]=useState(null);const [toast,showToast]=useToast();const [cat,setCat]=useState('all');const [editP,setEditP]=useState(null);
+ const inbox=S.orders.filter(o=>['submitted','in_review'].includes(o.status)).sort((a,b)=>a.createdAt-b.createdAt);
+ const live=S.orders.filter(o=>['validated','in_preparation','ready'].includes(o.status)).sort((a,b)=>(b.status==='ready')-(a.status==='ready'));
+ const o=open&&S.orders.find(x=>x.id===open);
+ if(o&&['submitted','in_review'].includes(o.status))return html`<div className="app"><${Review} o=${o} S=${S} act=${act} lang=${lang} onBack=${()=>setOpen(null)} onDone=${m=>{setOpen(null);showToast(m)}} share=${()=>copyShare(o,lang,showToast)}/><${Toast} msg=${toast}/></div>`;
+ if(o)return html`<div className="app"><${LiveDetail} o=${o} act=${act} lang=${lang} onBack=${()=>setOpen(null)} toast=${showToast} share=${()=>copyShare(o,lang,showToast)}/><${Toast} msg=${toast}/></div>`;
+ const shopN=s=>nm({fr:SHOPS[s][0],ar:SHOPS[s][1]},lang);
+ return html`<div className="app">
+  <header className="hdr"><div className="hrow"><div className="sp"><div className="eyebrow">El Mahroussa</div><h1 className="ttl">${tab==='inbox'?t.inbox:tab==='live'?t.live:t.catalog}</h1></div>
+   ${tab==='catalog'&&html`<button className="ibtn" aria-label=${t.newProduct} onClick=${()=>setEditP({id:uid(),cat:'glaces',fr:'',ar:'',mode:'count',step:1,packs:[],active:true,isNew:true})}><${Icon} n="plus"/></button>`}</div>
+   ${tab==='catalog'&&html`<div className="chips">${[['all',t.all],...CATS.map(c=>[c[0],lang==='ar'?c[2]:c[1]])].map(([k,l])=>html`<button key=${k} className="chip" aria-pressed=${cat===k} onClick=${()=>setCat(k)}>${l}</button>`)}</div>`}
+  </header>
+  <div className="body"><div className="pad">
+   ${tab==='inbox'&&(inbox.length?inbox.map(o=>{const w=Math.round((now()-o.createdAt)/MIN);return html`<button key=${o.id} className="ocard" onClick=${()=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);if(x.status==='submitted'){x.status='in_review';x.events.push({type:'review_started',at:now(),by:'owner'})}});setOpen(o.id)}}>
+     <div className="row"><span className="code sp" style=${{fontSize:21}}>${shopN(o.shop)}</span>${o.status==='submitted'&&html`<span style=${{width:10,height:10,borderRadius:5,background:'#B47C4E'}} aria-label=${t.newOrder}></span>`}
+      <span className="pill num" style=${{background:w>=10?'#F2DFC9':'var(--paper)',color:w>=10?'#7A4A22':'var(--muted)'}}><${Icon} n="clock" s=${14}/>${ago(o.createdAt,t)}</span></div>
+     <div className="row meta"><span className="num">${o.code}</span><span>·</span><${Icon} n="box" s=${15}/><span className="num">${o.lines.length}</span>${o.shopNote&&html`<span>·</span><${Icon} n="note" s=${15}/>`}${o.edited&&html`<span>·</span><${Icon} n="pen" s=${15}/>`}</div>
+    </button>`}):html`<div className="empty"><span className="ec"><${Icon} n="inbox"/></span>${t.nothing}</div>`)}
+   ${tab==='live'&&(live.length?live.map(o=>{const c=o.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;
+     return html`<button key=${o.id} className="ocard" onClick=${()=>setOpen(o.id)} style=${o.status==='ready'?{boxShadow:'0 0 0 2px #2B6540'}:null}>
+      <div className="row"><span className="code sp" style=${{fontSize:20}}>${shopN(o.shop)}</span><${Pill} s=${o.status} lang=${lang}/></div>
+      <div className="row meta"><${Icon} n=${o.team==='nuit'?'moon':'sun'} s=${15}/><span>${t[o.team||'matin']}</span><span>·</span><span className="num">${done}/${c.length}</span><span className="sp"></span><span className="num">${ago(o.at.validated||o.createdAt,t)}</span></div>
+      <div className="prog"><b style=${{width:`${c.length?done/c.length*100:0}%`,background:o.status==='ready'?'#2B6540':'#3E8A99'}}></b></div></button>`}):html`<div className="empty"><span className="ec"><${Icon} n="fire"/></span>${t.nothingLive}</div>`)}
+   ${tab==='catalog'&&CATS.filter(c=>cat==='all'||c[0]===cat).map(c=>{const ps=S.products.filter(p=>p.cat===c[0]);if(!ps.length)return null;return html`<div key=${c[0]} style=${{display:'flex',flexDirection:'column',gap:8}}>
+     <div className="meta" style=${{fontWeight:600,paddingInlineStart:4}}>${lang==='ar'?c[2]:c[1]}</div>
+     <div className="group">${ps.map(p=>html`<div key=${p.id} className="li"><button className="row sp" style=${{textAlign:'start'}} onClick=${()=>setEditP(structuredClone(p))}><${Art} p=${p} size=${44}/>
+      <div className="sp"><div style=${{fontSize:16,fontWeight:500,opacity:p.active?1:.5}}>${nm(p,lang)}</div><div className="meta num">${t.modes[p.mode]} · <bdi>${p.mode==='pack'?p.packs.map(k=>k.label).join(', '):fq(p.mode,p.step)}</bdi></div></div></button>
+      <button className="sw" role="switch" aria-checked=${p.active} aria-label=${p.fr} onClick=${()=>act(n=>{const x=n.products.find(y=>y.id===p.id);x.active=!x.active})}></button></div>`)}</div></div>`})}
+  </div></div>
+  <nav className="tabs">
+   <button className="tab" aria-pressed=${tab==='inbox'} onClick=${()=>setTab('inbox')}><${Icon} n="inbox"/>${t.inbox}${inbox.length>0&&html`<span className="cnt">${inbox.length}</span>`}</button>
+   <button className="tab" aria-pressed=${tab==='live'} onClick=${()=>setTab('live')}><${Icon} n="fire"/>${t.live}${live.some(o=>o.status==='ready')&&html`<span className="cnt" style=${{background:'#2B6540'}}>${live.filter(o=>o.status==='ready').length}</span>`}</button>
+   <button className="tab" aria-pressed=${tab==='catalog'} onClick=${()=>setTab('catalog')}><${Icon} n="grid"/>${t.catalog}</button>
+  </nav>
+  ${editP&&html`<${ProductSheet} p=${editP} lang=${lang} onClose=${()=>setEditP(null)} onSave=${p=>{act(n=>{const i=n.products.findIndex(x=>x.id===p.id);const c={...p};delete c.isNew;if(i<0)n.products.push(c);else n.products[i]=c});setEditP(null)}}/>`}
+  <${Toast} msg=${toast}/>
+ </div>`}
+
+function Review({o,S,act,lang,onBack,onDone,share}){const t=T[lang];const [edit,setEdit]=useState(null);const [refuse,setRefuse]=useState(null);const [noteFor,setNoteFor]=useState(null);
+ const [team,setTeam]=useState(o.team||teamByHour());const [labNote,setLabNote]=useState(o.labNote||'');
+ const upd=(id,fn)=>act(n=>{const x=n.orders.find(y=>y.id===o.id);const l=x.lines.find(z=>z.id===id);fn(l,x)});
+ const allRefused=o.lines.every(l=>l.decision==='refused');
+ const send=()=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);x.lines.forEach(l=>{if(l.decision!=='refused')l.decision=l.appr<l.req?'reduced':'accepted';l.changed=false});
+   x.labNote=labNote;x.team=team;x.edited=false;x.version++;
+   if(x.lines.every(l=>l.decision==='refused')){x.status='refused';x.at.refused=now();x.events.push({type:'refused',at:now(),by:'owner'});n.notif.shop++}
+   else{x.status='validated';x.at.validated=now();x.newForLabo=true;x.events.push({type:'validated',at:now(),by:'owner',team});n.notif.shop++;n.notif.labo++}});onDone(allRefused?t.refusedToast:t.validatedToast)};
+ const shopN=nm({fr:SHOPS[o.shop][0],ar:SHOPS[o.shop][1]},lang);
+ return html`<${React.Fragment}>
+  <header className="hdr"><div className="hrow"><button className="ibtn" aria-label="back" onClick=${()=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);if(x.status==='in_review'){x.status='submitted';x.events.push({type:'review_released',at:now(),by:'owner'})}});onBack()}}><${Icon} n="back" cls="flip"/></button>
+   <div className="sp"><h1 className="ttl" style=${{fontSize:23}}>${shopN}</h1><div className="eyebrow num">${o.code} · ${ago(o.createdAt,t)}</div></div>
+   <button className="ibtn" aria-label="share" onClick=${share}><${Icon} n="share"/></button></div></header>
+  ${o.edited&&html`<div className="banner"><${Icon} n="pen" s=${18}/>${t.edited}</div>`}
+  <div className="body"><div className="pad">
+   ${o.shopNote&&html`<div className="bubble"><${Icon} n="note" s=${18}/><span>${o.shopNote}</span></div>`}
+   <div className="group">${o.lines.map(l=>{const ref=l.decision==='refused';const red=!ref&&l.appr<l.req;const isEdit=edit===l.id;
+    return html`<div key=${l.id} className="li" style=${{flexWrap:isEdit?'wrap':'nowrap',gap:8,background:ref?'#F7E4DF':l.changed?'#EAF2E6':null}}>
+     <div className="sp"><div style=${{fontSize:16,fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',textDecoration:ref?'line-through':'none',color:ref?'var(--muted)':null}}>${nm(l,lang)}</div>
+      ${ref&&html`<div style=${{fontSize:13,color:'#9B2C1F',fontWeight:500}}>${l.reason}</div>`}
+      ${l.ownerNote&&html`<div className="meta"><${Icon} n="note" s=${13}/>${l.ownerNote}</div>`}</div>
+     ${isEdit?html`<span className="strike num"><bdi>${fq(l.mode,l.req,l.pack)}</bdi></span><button className="lbtn" style=${{background:'#2B6540',color:'#F5EFE3'}} aria-label=${t.ok} onClick=${()=>setEdit(null)}><${Icon} n="check" s=${18}/></button>
+       <div className="step light" style=${{flexBasis:'100%'}}><button aria-label="-" onClick=${()=>upd(l.id,x=>{x.appr=Math.max(x.step,x.appr-x.step)})}><${Icon} n="minus" s=${18}/></button><bdi className="v num">${fq(l.mode,l.appr,l.pack)}</bdi><button aria-label="+" onClick=${()=>upd(l.id,x=>{x.appr=Math.min(x.req,x.appr+x.step)})}><${Icon} n="plus" s=${18}/></button></div>`
+     :html`<div style=${{textAlign:'end'}}><bdi className="qty num" style=${red?{color:'#7A4A22'}:null}>${fq(l.mode,ref?l.req:l.appr,l.pack)}</bdi>${red&&html`<div className="strike num"><bdi>${fq(l.mode,l.req,l.pack)}</bdi></div>`}</div>
+      ${!ref&&html`<button className="lbtn" aria-label=${t.editing} onClick=${()=>setEdit(l.id)}><${Icon} n="pen" s=${17}/></button>`}
+      <button className="lbtn" aria-label=${t.noteLabo} onClick=${()=>setNoteFor(l)} style=${l.ownerNote?{color:'#7A4A22',background:'#F2DFC9'}:null}><${Icon} n="note" s=${17}/></button>
+      ${ref?html`<button className="lbtn" aria-label="undo" onClick=${()=>upd(l.id,x=>{x.decision='accepted';x.reason='';x.appr=x.req})}><${Icon} n="undo" s=${17}/></button>`
+       :html`<button className="lbtn" aria-label="refuse" onClick=${()=>setRefuse(l)}><${Icon} n="x" s=${17}/></button>`}`}
+    </div>`})}</div>
+  </div></div>
+  <div className="foot">
+   <div className="row"><div className="segc sp" style=${{padding:3}}>${['matin','nuit'].map(k=>html`<button key=${k} aria-pressed=${team===k} onClick=${()=>setTeam(k)} style=${{height:40,display:'flex',alignItems:'center',justifyContent:'center',gap:6}}><${Icon} n=${k==='matin'?'sun':'moon'} s=${17}/>${t[k]}</button>`)}</div>
+    <button className="lbtn" style=${{width:46,height:46,borderRadius:14,...(labNote?{background:'#F2DFC9',color:'#7A4A22'}:{})}} aria-label=${t.noteLabo} onClick=${()=>setNoteFor('order')}><${Icon} n="note"/></button></div>
+   <button className=${'primary'+(allRefused?' danger':'')} onClick=${send}>${allRefused?t.refuseAll:t.toLabo}</button>
+  </div>
+  ${refuse&&html`<${ReasonSheet} title=${nm(refuse,lang)} reasons=${t.reasons} t=${t} onClose=${()=>setRefuse(null)} onPick=${r=>{upd(refuse.id,x=>{x.decision='refused';x.reason=r});setRefuse(null)}}/>`}
+  ${noteFor&&html`<${NoteSheet} t=${t} title=${noteFor==='order'?t.noteLabo:nm(noteFor,lang)} init=${noteFor==='order'?labNote:noteFor.ownerNote} onClose=${()=>setNoteFor(null)}
+     onSave=${v=>{if(noteFor==='order')setLabNote(v);else upd(noteFor.id,x=>{x.ownerNote=v});setNoteFor(null)}}/>`}
+ <//>`}
+
+function ReasonSheet({title,reasons,t,onClose,onPick,withQty}){const [r,setR]=useState('');const [txt,setTxt]=useState('');
+ return html`<${Sheet} onClose=${onClose} label=${title}><h2 className="sh-t">${title}</h2>
+  <div className="rchips">${reasons.map(x=>html`<button key=${x} className="rchip" aria-pressed=${r===x} onClick=${()=>setR(x)}>${x}</button>`)}</div>
+  <input className="tin" placeholder=${t.other} value=${txt} onInput=${e=>{setTxt(e.target.value);setR('')}} aria-label=${t.other}/>
+  <button className="primary danger" disabled=${!(r||txt.trim())} onClick=${()=>onPick(r||txt.trim())}><${Icon} n="x"/>${t.ok}</button><//>`}
+
+function NoteSheet({t,title,init,onClose,onSave}){const [v,setV]=useState(init||'');
+ return html`<${Sheet} onClose=${onClose} label=${title}><h2 className="sh-t">${title}</h2><textarea className="tin area" autoFocus value=${v} onInput=${e=>setV(e.target.value)} placeholder=${t.noteLabo} aria-label=${t.noteLabo}></textarea>
+  <button className="primary" onClick=${()=>onSave(v.trim())}>${t.ok}</button><//>`}
+
+function LiveDetail({o,act,lang,onBack,toast,share}){const t=T[lang];const [noteFor,setNoteFor]=useState(null);const c=o.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;
+ const canNote=['validated','in_preparation'].includes(o.status);
+ return html`<${React.Fragment}>
+  <header className="hdr"><div className="hrow"><button className="ibtn" aria-label="back" onClick=${onBack}><${Icon} n="back" cls="flip"/></button>
+   <div className="sp"><h1 className="ttl" style=${{fontSize:23}}>${nm({fr:SHOPS[o.shop][0],ar:SHOPS[o.shop][1]},lang)}</h1><div className="eyebrow num">${o.code} · ${done}/${c.length}</div></div>
+   <button className="ibtn" aria-label="share" onClick=${share}><${Icon} n="share"/></button>
+   ${canNote&&html`<button className="ibtn" aria-label=${t.noteLabo} onClick=${()=>setNoteFor('order')}><${Icon} n="note"/></button>`}</div>
+   <div className="row"><${Pill} s=${o.status} lang=${lang}/><span className="meta" style=${{color:'#A9BBA9'}}><${Icon} n=${o.team==='nuit'?'moon':'sun'} s=${15}/>${t[o.team||'matin']}</span></div></header>
+  <div className="body"><div className="pad">
+   ${(o.labNote||o.notes.length>0)&&html`<div className="bubble" style=${{flexDirection:'column',gap:4}}>${o.labNote&&html`<span>${o.labNote}</span>`}${o.notes.filter(n=>!n.lineId).map((n,i)=>html`<span key=${i}>${n.text}</span>`)}</div>`}
+   <div className="group">${o.lines.map(l=>html`<div key=${l.id} className="li"><${LineState} l=${l}/><div className="sp"><div style=${{fontSize:16,fontWeight:500,textDecoration:l.decision==='refused'?'line-through':'none'}}>${nm(l,lang)}</div>
+     ${l.laboNote&&html`<div style=${{fontSize:13,color:'#7A4A22'}}>${l.laboNote}</div>`}${[l.ownerNote,...o.notes.filter(n=>n.lineId===l.id).map(n=>n.text)].filter(Boolean).map((x,i)=>html`<div key=${i} className="meta"><${Icon} n="note" s=${13}/>${x}</div>`)}</div>
+     <bdi className="qty num">${fq(l.mode,l.prep==='partial'?l.prepQty:l.appr,l.pack)}</bdi>
+     ${canNote&&l.decision!=='refused'&&html`<button className="lbtn" aria-label=${t.noteLabo} onClick=${()=>setNoteFor(l)}><${Icon} n="note" s=${17}/></button>`}</div>`)}</div>
+  </div></div>
+  ${noteFor&&html`<${NoteSheet} t=${t} title=${noteFor==='order'?t.noteLabo:nm(noteFor,lang)} init="" onClose=${()=>setNoteFor(null)} onSave=${v=>{if(v)act(n=>{const x=n.orders.find(y=>y.id===o.id);
+     x.notes.push({lineId:noteFor==='order'?null:noteFor.id,text:v,at:now()});x.newNote=true;x.events.push({type:'note_added',at:now(),by:'owner'});n.notif.labo++});setNoteFor(null);if(v)toast(t.noteToast)}}/>`}
+ <//>`}
+
+function ProductSheet({p:init,lang,onClose,onSave}){const t=T[lang];const [p,setP]=useState(init);const set=(k,v)=>setP({...p,[k]:v});
+ const unit={count:'pcs',weight:'g',volume:'ml'}[p.mode];
+ return html`<${Sheet} onClose=${onClose} label=${t.newProduct}>
+  <div className="row"><h2 className="sh-t sp">${init.isNew?t.newProduct:nm(init,lang)}</h2><button className="lbtn" aria-label="x" onClick=${onClose}><${Icon} n="x" s=${18}/></button></div>
+  <label className="field">${t.nameFr}<input id="pf-fr" value=${p.fr} onInput=${e=>set('fr',e.target.value)}/></label>
+  <label className="field">${t.nameAr}<input id="pf-ar" dir="rtl" value=${p.ar} onInput=${e=>set('ar',e.target.value)}/></label>
+  <label className="field">${t.category}<select id="pf-cat" value=${p.cat} onChange=${e=>set('cat',e.target.value)}>${CATS.map(c=>html`<option key=${c[0]} value=${c[0]}>${lang==='ar'?c[2]:c[1]}</option>`)}</select></label>
+  <div className="field">${t.type}<div className="segc">${['count','weight','volume','pack'].map(m=>html`<button key=${m} aria-pressed=${p.mode===m} onClick=${()=>setP({...p,mode:m,step:m==='weight'?250:m==='volume'?1000:1,packs:m==='pack'&&!p.packs.length?[{id:uid(),label:'5 L',active:true}]:p.packs})}>${t.modes[m]}</button>`)}</div></div>
+  ${p.mode!=='pack'?html`<label className="field">${t.step}<div className="row"><input id="pf-step" className="num" inputMode="numeric" value=${p.step} onInput=${e=>set('step',Math.max(1,parseInt(e.target.value.replace(/\D/g,''))||1))} style=${{flex:1}}/><span style=${{fontSize:16,color:'var(--ink)',width:36}}>${unit}</span></div></label>`
+   :html`<div className="field">${t.packs}<div className="group" style=${{background:'var(--paper)'}}>${p.packs.map((k,i)=>html`<div key=${k.id} className="li">
+     <input className="tin num sp" value=${k.label} aria-label=${t.packs} onInput=${e=>{const ps=[...p.packs];ps[i]={...k,label:e.target.value};set('packs',ps)}} style=${{background:'var(--cream)'}}/>
+     <button className="sw" role="switch" aria-checked=${k.active} aria-label=${k.label} onClick=${()=>{const ps=[...p.packs];ps[i]={...k,active:!k.active};set('packs',ps)}}></button></div>`)}</div>
+     <button className="rchip" style=${{alignSelf:'flex-start',display:'flex',alignItems:'center',gap:6}} onClick=${()=>set('packs',[...p.packs,{id:uid(),label:'',active:true}])}><${Icon} n="plus" s=${16}/>${t.addPack}</button></div>`}
+  <button className="primary" disabled=${!p.fr.trim()||(p.mode==='pack'&&!p.packs.some(k=>k.label.trim()))} onClick=${()=>onSave({...p,packs:p.packs.filter(k=>k.label.trim())})}>${t.save}</button>
+ <//>`}
+
+/* ================= LABO ================= */
+function LaboApp({S,act,lang}){const t=T[lang];const team=S.labo.team;const [mark,setMark]=useState(null);const [toast,showToast]=useToast();
+ const active=S.orders.filter(o=>['validated','in_preparation'].includes(o.status)).sort((a,b)=>(a.at.validated||0)-(b.at.validated||0));
+ const unack=active.filter(o=>o.newForLabo||o.newNote).length;
+ const tick=(o,l)=>act(n=>{const x=n.orders.find(y=>y.id===o.id);const z=x.lines.find(w=>w.id===l.id);if(z.prep==='todo'){z.prep='done';z.prepTeam=n.labo.team}else{z.prep='todo';z.prepQty=null;z.laboNote=''}
+   x.newForLabo=false;if(x.status==='validated'){x.status='in_preparation';x.at.in_preparation=now();x.events.push({type:'prep_started',at:now(),by:'labo',team:n.labo.team})}x.events.push({type:'line_prepped',at:now(),by:'labo',team:n.labo.team})});
+ const closeO=o=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='ready';x.at.ready=now();x.readyTeam=n.labo.team;x.events.push({type:'ready',at:now(),by:'labo',team:n.labo.team});n.notif.owner++;n.notif.shop++});showToast(t.closedToast)};
+ return html`<div className=${'labo '+(team||'matin')}>
+  <header className="lhdr"><${Icon} n=${team==='nuit'?'moon':'sun'} s=${30}/><div><div style=${{fontSize:24,fontWeight:600}}>${t[team||'matin']}</div><div className="num" style=${{fontSize:14,opacity:.75}}>${t.since} ${hhmm(S.labo.since)}</div></div>
+   <button className="ibtn" style=${{background:'rgba(127,127,127,.18)',color:'inherit'}} aria-label=${t.handover} onClick=${()=>act(n=>{n.labo.handover=true})}><${Icon} n="users"/></button>
+   <span className="sp"></span>
+   ${unack>0&&html`<button className="alarm" onClick=${()=>act(n=>n.orders.forEach(o=>{o.newForLabo=false;o.newNote=false}))}><${Icon} n="bell"/>${t.newOrder} · ${unack}</button>`}
+  </header>
+  <div className="lgrid">
+   ${active.length===0&&html`<div className="empty" style=${{gridColumn:'1/-1',color:'var(--lm)'}}><span className="ec" style=${{background:'var(--lc)'}}><${Icon} n="check"/></span>${t.nothingLive}</div>`}
+   ${active.map(o=>{const c=o.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;const all=done===c.length;
+    return html`<article key=${o.id} className=${'lcard'+(o.newForLabo?' new':'')}>
+     <div style=${{padding:'16px 16px 12px',display:'flex',flexDirection:'column',gap:8}}>
+      <div className="row"><h2 style=${{margin:0,fontSize:25,fontWeight:600}} className="sp">${nm({fr:SHOPS[o.shop][0],ar:SHOPS[o.shop][1]},lang)}</h2>
+       ${o.team&&o.team!==team&&html`<${Icon} n=${o.team==='nuit'?'moon':'sun'} s=${18}/>`}<span className="num" style=${{fontSize:18,fontWeight:600,color:'var(--lm)'}}>${done}/${c.length}</span></div>
+      <div className="prog" style=${{background:'var(--ll)'}}><b style=${{width:`${c.length?done/c.length*100:0}%`,background:all?'#6BAA75':'#3E8A99'}}></b></div>
+      ${(o.labNote||o.notes.some(n=>!n.lineId))&&html`<div className="bubble" style=${o.newNote?{boxShadow:'0 0 0 2px #B47C4E'}:null}><${Icon} n="note" s=${18}/><span>${[o.labNote,...o.notes.filter(n=>!n.lineId).map(n=>n.text)].filter(Boolean).join(' · ')}</span></div>`}
+     </div>
+     ${c.map(l=>{const st=l.prep;const notes=[l.ownerNote,...o.notes.filter(n=>n.lineId===l.id).map(n=>n.text)].filter(Boolean);
+      return html`<div key=${l.id} className=${'row'+(st==='done'?' ldone':'')} style=${{borderTop:'1px solid var(--ll)'}}>
+       <button className="lline" style=${{borderTop:0}} onClick=${()=>tick(o,l)} aria-pressed=${st!=='todo'}>
+        <span className="ck" style=${st==='done'?{background:'#6BAA75',boxShadow:'none',color:'#1A3524'}:st==='partial'?{background:'#B47C4E',boxShadow:'none'}:st==='not_done'?{background:'#D0574A',boxShadow:'none'}:null}>
+         ${st==='done'&&html`<${Icon} n="check" s=${24} w=${3}/>`}${st==='partial'&&html`<${Icon} n="minus" s=${24} w=${3}/>`}${st==='not_done'&&html`<${Icon} n="x" s=${24} w=${3}/>`}</span>
+        <span className="sp"><span className="lname" style=${{display:'block'}}>${nm(l,lang)}</span>
+         ${l.laboNote&&html`<span style=${{display:'block',fontSize:14,color:st==='not_done'?'#E58A7E':'#D7A06F',fontWeight:500}}>${st==='partial'?`${fq(l.mode,l.prepQty,l.pack)} · `:''}${l.laboNote}</span>`}
+         ${notes.map((x,i)=>html`<span key=${i} style=${{display:'flex',gap:5,alignItems:'center',fontSize:14,color:'var(--lm)'}}><${Icon} n="note" s=${14}/>${x}</span>`)}</span>
+        <bdi className="lqty num">${fq(l.mode,l.appr,l.pack)}</bdi></button>
+       <button className="lmore" aria-label=${t.partial} onClick=${()=>setMark({o,l})}><${Icon} n="more"/></button></div>`})}
+     <button className="lclose" disabled=${!all} onClick=${()=>closeO(o)}>${t.close}</button>
+    </article>`})}
+  </div>
+  ${mark&&html`<${MarkSheet} l=${mark.l} t=${t} lang=${lang} onClose=${()=>setMark(null)} onSave=${(prep,qty,note)=>{act(n=>{const x=n.orders.find(y=>y.id===mark.o.id);const z=x.lines.find(w=>w.id===mark.l.id);
+     z.prep=prep;z.prepQty=prep==='partial'?qty:null;z.laboNote=note;z.prepTeam=n.labo.team;x.newForLabo=false;if(x.status==='validated'){x.status='in_preparation';x.at.in_preparation=now()}x.events.push({type:'line_'+prep,at:now(),by:'labo',team:n.labo.team})});setMark(null)}}/>`}
+  ${(S.labo.handover||!team)&&html`<${Handover} t=${t} lang=${lang} onDone=${tm=>act(n=>{n.labo.team=tm;n.labo.since=now();n.labo.handover=false})}/>`}
+  <${Toast} msg=${toast}/>
+ </div>`}
+
+function MarkSheet({l,t,lang,onClose,onSave}){const [kind,setKind]=useState('partial');const half=Math.max(l.step,Math.floor(l.appr/2/l.step)*l.step);const [qty,setQty]=useState(Math.min(half,l.appr-l.step)||l.step);const [r,setR]=useState('');const [txt,setTxt]=useState('');
+ const note=r||txt.trim();
+ return html`<${Sheet} onClose=${onClose} label=${nm(l,lang)}><div className="row"><h2 className="sh-t sp">${nm(l,lang)}</h2><bdi className="qty num">${fq(l.mode,l.appr,l.pack)}</bdi></div>
+  <div className="segc"><button aria-pressed=${kind==='partial'} onClick=${()=>setKind('partial')}>${t.partial}</button><button aria-pressed=${kind==='not_done'} onClick=${()=>setKind('not_done')}>${t.notDone}</button></div>
+  ${kind==='partial'&&html`<div className="bigstep"><button aria-label="-" onClick=${()=>setQty(Math.max(l.step,qty-l.step))}><${Icon} n="minus" s=${26}/></button><bdi className="v num" style=${{fontSize:32}}>${fq(l.mode,qty,l.pack)}</bdi><button aria-label="+" onClick=${()=>setQty(Math.min(l.appr-l.step,qty+l.step))}><${Icon} n="plus" s=${26}/></button></div>`}
+  <div className="rchips">${t.lreasons.map(x=>html`<button key=${x} className="rchip" aria-pressed=${r===x} onClick=${()=>{setR(x);setTxt('')}}>${x}</button>`)}</div>
+  <input className="tin" placeholder=${t.other} value=${txt} onInput=${e=>{setTxt(e.target.value);setR('')}} aria-label=${t.other}/>
+  <button className="primary" disabled=${!note||(kind==='partial'&&l.appr<=l.step)} onClick=${()=>onSave(kind,qty,note)}>${t.ok}</button><//>`}
+
+function Handover({t,onDone}){const [tm,setTm]=useState(teamByHour());const [pin,setPin]=useState('');const [err,setErr]=useState(false);
+ const press=d=>{if(pin.length>=4)return;const p=pin+d;setPin(p);setErr(false);if(p.length===4){setTimeout(()=>{if(p===PINS[tm]){onDone(tm)}else{setErr(true);setPin('')}},180)}};
+ return html`<div className="hand" role="dialog" aria-label=${t.handover}>
+  <div style=${{display:'flex',flexDirection:'column',gap:16}}>
+   <div><div style=${{fontSize:16,color:'#4E6455',fontWeight:500}}>${t.handover}</div><h2 style=${{margin:'4px 0 0',fontSize:34,fontWeight:600}}>${t.who}</h2></div>
+   ${['matin','nuit'].map(k=>html`<button key=${k} className="team" aria-pressed=${tm===k} onClick=${()=>{setTm(k);setPin('');setErr(false)}}
+     style=${k==='matin'?{background:'#DCCBA4',color:'#3E3013',boxShadow:tm===k?'0 0 0 4px #ECE3D0,0 0 0 7px #2B6540':'none'}:{background:'#1A3524',color:'#F5EFE3',boxShadow:tm===k?'0 0 0 4px #ECE3D0,0 0 0 7px #6BAA75':'none'}}>
+     <${Icon} n=${k==='matin'?'sun':'moon'} s=${36}/><span className="sp">${t[k]}</span><span className="num" style=${{fontSize:16,opacity:.75}}>${k==='matin'?'04:00–16:00':'16:00–04:00'}</span></button>`)}
+   <span style=${{fontSize:13,color:'#4E6455'}}>${t.demo}</span>
+  </div>
+  <div style=${{display:'flex',flexDirection:'column',gap:16}}>
+   <div className=${err?'shake':''} style=${{display:'flex',gap:16,justifyContent:'center',padding:'8px 0'}}>${[0,1,2,3].map(i=>html`<span key=${i} className=${'pd'+(i<pin.length?' f':'')}></span>`)}</div>
+   <div style=${{textAlign:'center',color:'#9B2C1F',fontSize:15,minHeight:20,fontWeight:500}}>${err?t.wrong:''}</div>
+   <div dir="ltr" style=${{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:10}}>
+    ${['1','2','3','4','5','6','7','8','9'].map(d=>html`<button key=${d} className="key num" onClick=${()=>press(d)}>${d}</button>`)}
+    <span></span><button className="key num" onClick=${()=>press('0')}>0</button><button className="key" aria-label="delete" style=${{background:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}} onClick=${()=>setPin(pin.slice(0,-1))}><${Icon} n="del" s=${26}/></button>
+   </div>
+  </div>
+ </div>`}
+
+/* ================= ROOT ================= */
+function App(){const [S,setS]=useState(load);
+ const act=fn=>setS(s=>{const n=structuredClone(s);fn(n);return n});
+ useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},[S]);
+ const [,tickClock]=useState(0);useEffect(()=>{const i=setInterval(()=>tickClock(x=>x+1),30000);return()=>clearInterval(i)},[]);
+ const lang=S.lang,t=T[lang],role=S.role;
+ useEffect(()=>{document.documentElement.lang=lang},[lang]);
+ const go=r=>act(n=>{n.role=r;n.notif[r]=0});
+ useEffect(()=>{if(S.notif[role])act(n=>{n.notif[role]=0})},[S.notif[role],role]);
+ return html`<div className="stage">
+  <div className="pbar">
+   <div className="seg" role="group" aria-label="role">${['shop','owner','labo'].map(r=>html`<button key=${r} aria-pressed=${role===r} onClick=${()=>go(r)}>${t[r]}${S.notif[r]>0&&role!==r&&html`<span className="cnt num">${S.notif[r]}</span>`}</button>`)}</div>
+   <div className="seg" role="group" aria-label="langue">${['fr','ar'].map(l=>html`<button key=${l} aria-pressed=${lang===l} onClick=${()=>act(n=>{n.lang=l})}>${l==='fr'?'FR':'ع'}</button>`)}</div>
+   ${role==='labo'&&html`<button className="ghost" onClick=${()=>act(n=>{n.labo.handover=true})}>${t.sim}</button>`}
+   <button className="ghost" onClick=${()=>setS(seed())}>${t.reset}</button>
+  </div>
+  <div className=${'device'+(role==='labo'?' tablet':'')} dir=${lang==='ar'?'rtl':'ltr'} lang=${lang}>
+   ${role==='shop'&&html`<${ShopApp} S=${S} act=${act} lang=${lang}/>`}
+   ${role==='owner'&&html`<${OwnerApp} S=${S} act=${act} lang=${lang}/>`}
+   ${role==='labo'&&html`<${LaboApp} S=${S} act=${act} lang=${lang}/>`}
+  </div>
+ </div>`}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>

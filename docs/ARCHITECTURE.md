@@ -84,8 +84,7 @@ labo_teams       (id, code unique ('morning','night'), name_fr, name_ar, starts_
 categories       (id, slug, name_fr, name_ar, sort_order, active)
 products         (id, category_id, name_fr, name_ar null, image_path null,
                   quantity_mode, step int, min_qty int, max_qty int null,
-                  quick_values int[], allow_free_input bool,
-                  active, sort_order, created_at, updated_at)
+                                    active, sort_order, created_at, updated_at)
 product_packs    (id, product_id, label_fr, label_ar, size int, size_unit text, active, sort_order)
 refusal_reasons  (id, label_fr, label_ar, sort_order, active)
 

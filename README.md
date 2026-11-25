@@ -23,6 +23,7 @@ Shops: El Madania, 1er Mai, Sidi Abdelah, Kouba, Rouiba, Birtouta, Boulevard, AÃ
 | [docs/ROLES.md](docs/ROLES.md) | Roles, permission matrix, auth model |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, data model, RPCs, realtime, offline, push |
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Tokens, components, screens, accessibility |
+| [prototype/index.html](prototype/index.html) | Clickable prototype: shop, owner and labo in one page. Published: https://claude.ai/artifact/W4cty4yk6mQHQ94L8hDtJ8 |
 | [CLAUDE.md](CLAUDE.md) | Rules for AI-assisted development in this repo |
 
 ## Stack

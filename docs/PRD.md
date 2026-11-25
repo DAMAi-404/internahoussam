@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft v0.3 — all owner questions answered (see §12) |
+| Status | Draft v0.4 — prototype in `prototype/index.html`; all questions answered |
 | Last updated | 2026-11-25 |
 | Scope | V1 (pilot → 12 shops) |
 
@@ -96,13 +96,13 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 |---|---|---|
 | SHP-1 | The device stays logged in permanently. No login on each visit. | P0 |
 | SHP-2 | Home screen: category tiles with icons. Search across all products, matching FR and AR names. | P0 |
-| SHP-3 | Tapping a product opens a bottom sheet with that product's quantity control (§7). One tap on a quick button adds it to the cart. | P0 |
+| SHP-3 | **One tap on "+" adds the owner-defined step** (e.g. +10 cornets, +250 g pistache) straight from the product card. The card then turns into a − qty + stepper. At the minimum, − becomes a trash icon. Pack products open a small sheet: pick the pack, then a stepper. **No quick-value buttons.** | P0 |
 | SHP-4 | A cart bar stays visible: line count and an **"Envoyer"** button. | P0 |
 | SHP-5 | Before sending, show a review screen listing every line, editable, with an optional note to the owner. One confirmation tap sends. | P0 |
 | SHP-6 | The cart is saved on the device after every change, so it survives app kills, refreshes and dead batteries. | P0 |
 | SHP-7 | Sending is **idempotent**: a double tap, a retry or a flaky network can never create two orders. | P0 |
 | SHP-8 | Sending while offline queues the order and sends it automatically when the connection returns. The UI says so clearly ("En file d'attente — sera envoyée"). | P0 |
-| SHP-10 | Favourites / "souvent commandés" row at the top of the home screen, computed from the shop's history. | P1 |
+| SHP-10 | **Filters** at the top: Tout · Habituels (products this shop has ordered before) · the 10 categories. Search behind an icon. | P0 |
 | SHP-11 | Edit or cancel the order **until it is sent to the labo** (`submitted` or `in_review`). If the owner is reviewing it at that moment, his screen refreshes with a banner "La boutique a modifié la commande". Changed lines are highlighted and his decisions on those lines reset. Unchanged lines keep their decisions. | P0 |
 | SHP-12 | **"Partager"** fallback: send the cart or an order as compact plain text through the phone's share sheet (WhatsApp, SMS…), with copy to clipboard as backup. Works offline, because the cart is on the device. | P0 |
 
@@ -110,7 +110,7 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 
 | ID | Requirement | P |
 |---|---|---|
-| TRK-1 | Order list with status shown by **colour + icon + word** together, never colour alone: 🟠 En attente · 🟢 Acceptée · 🔴 Refusée. | P0 |
+| TRK-1 | Order list with a status pill (dot + word). **Every step has its own colour**: En attente (wood), Acceptée (light sage), En préparation (teal), **Prête (solid deep green)**, Reçue (grey), Refusée (blush). **State is shown with icons, not sentences:** a pen icon appears only when the order can still be edited. | P0 |
 | TRK-2 | Order detail: each line shows requested qty → approved qty. Reduced lines are highlighted. Refused lines show the owner's reason. | P0 |
 | TRK-3 | Sub-states inside green: *En préparation* → *Prête à récupérer* → *Reçue*. | P0 |
 | TRK-4 | Updates arrive live, with no refresh needed. On reconnect or app focus, data is re-fetched. | P0 |
@@ -125,8 +125,8 @@ Priority: **P0** = required for the pilot; **P1** = required before all 12 shops
 | OWN-1 | Inbox of all incoming orders from the 12 shops, oldest first, with the shop name and how long each has waited. | P0 |
 | OWN-2 | Push notification for each new order, plus an in-app sound and badge. | P0 |
 | OWN-3 | Opening an order sets it to `in_review`, which locks shop edits. | P0 |
-| OWN-4 | For each line: **Accepter** (default) / **Réduire** (stepper using the same quantity control) / **Refuser** (preset reasons + free text). | P0 |
-| OWN-5 | **"Tout accepter"**: every line is accepted unless the owner touched it. This is the fast path for the common case. | P0 |
+| OWN-4 | **Every line is accepted by default.** Each line has three icons: **pen** (reduce the quantity with a stepper, never above the request), **note** (note for the labo), **×** (refuse, with a preset reason or free text). A refused line shows an undo icon. | P0 |
+| OWN-5 | One button: **"Envoyer au labo"**. If every line was refused, it becomes "Refuser la commande". There is no "Tout accepter" button, since accepting is the default. | P0 |
 | OWN-6 | Optional notes: for the labo **per order and per line** (e.g. "Chantilly bien ferme"), and for the shop. | P0 |
 | OWN-7 | Assign the order to a labo team. The default comes from the current time against the team schedules, and the owner can override it. | P0 |
 | OWN-8 | If every line is refused, the order becomes `refused` and is never sent to the labo. | P0 |
@@ -169,12 +169,12 @@ The owner picks one mode per product. The shop only ever sees the control for th
 
 | Mode | Example | Base unit stored | Shop control |
 |---|---|---|---|
-| `count` | Cornets, boxes, pizzas | piece (integer) | Stepper − / + and quick buttons (e.g. 5, 10, 20) |
-| `weight` | Pistache 250 g | **gram** (integer) | Quick buttons (250 g, 500 g, 1 kg) + optional typed amount |
-| `volume` | Sauce | **millilitre** (integer) | Quick buttons (500 ml, 1 L) + optional typed amount |
+| `count` | Cornets, boxes, pizzas | piece (integer) | "+" then stepper, by the owner's step (e.g. 10) |
+| `weight` | Pistache 250 g | **gram** (integer) | "+" then stepper, by the owner's step (e.g. 250 g) |
+| `volume` | Pâte à crêpe | **millilitre** (integer) | "+" then stepper, by the owner's step (e.g. 1 L) |
 | `pack` | Cream 5 L / 10 L | pack count (integer) per pack variant | Pick a pack variant (chip), then a stepper for how many |
 
-Per-product settings: `quick_values[]`, `step`, `min`, `max`, and `allow_free_input` (whether the shop may type a number).
+Per-product settings: `step` (also the minimum) and optional `max`. Quick-value buttons and free typing were removed (owner feedback, 2026-11-25): one tap on "+" is faster and leaves nothing to misread.
 
 **Why integers in base units:** floating-point quantities (0.25 kg) cause rounding bugs and inconsistent displays. 250 g is stored as `250`, and the display layer formats it as "250 g" or "1,5 kg".
 
@@ -274,11 +274,11 @@ How each state appears to the shop:
 | — | "Recommander" button | **Dropped.** The label was ambiguous ("clear and reorder?"). The "souvent commandés" row (SHP-10) stays. |
 | — | Export to the owner's PC | **Dropped.** The owner keeps entering the data himself. The app shows 30 days of history. |
 | — | WhatsApp fallback | **"Partager" button** (SHP-12, OWN-13) instead of parallel WhatsApp ordering. |
+| Q12 | Brand colours | **Given** (sage #6BAA75 family, dark green ink, cream/paper, wood, blush). See DESIGN_SYSTEM.md. |
+| Q13 | Shifts | **04:00 / 16:00 confirmed.** |
+| Q14 | Team PINs | **The owner sets them** and changes them when someone leaves. |
+| — | UI feedback (2026-11-25) | Less text, functional icons for state (pen = editable), filters, no quick buttons, auto-accept with pen/×, distinct colour per step. Applied in the prototype. |
 
 ### Still open
 
-| # | Question | Default if no answer |
-|---|---|---|
-| Q12 | Exact brand green and beige (logo file or hex codes)? | Provisional palette in DESIGN_SYSTEM.md |
-| Q13 | Shift times 04:00 / 16:00: confirmed? | Yes |
-| Q14 | Who sets the team PINs, and how often do they change? | The owner sets them and changes them when someone leaves |
+None. The next decisions come from testing the prototype with 1–2 shop managers.

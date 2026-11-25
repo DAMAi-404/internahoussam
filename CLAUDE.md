@@ -49,14 +49,15 @@ If code and docs disagree, stop and ask. Don't silently pick one. Update the doc
 
 ### UI
 - Use design-system components from `src/components/ui`. Don't hand-roll buttons, pills or sheets in features.
-- Status is displayed only via `<StatusPill>` (coloured dot + word).
+- Status is displayed only via `<StatusPill>` (coloured dot + word, one distinct colour per step).
 - Touch targets ≥ 48 px (labo ≥ 64 px). One primary action per screen, at the bottom.
 - CSS logical properties only (`ms-`, `pe-`, `start-`). No `left`/`right`/`ml`/`pr`. Must work in RTL.
 - Every user-facing string goes through i18n with both `ar` and `fr` keys. No hard-coded text.
 - Wrap number+unit in `<bdi>` so it never reorders in RTL.
-- Brand: **Mahroussa green + beige** (tokens in DESIGN_SYSTEM.md). **No decorative icons**: no coloured icon tiles, no icon per category, no emoji. Products are shown with the owner's photos. Icons only where they do a job (back, share, search, tab bar).
+- Brand: **Mahroussa sage green + dark green ink + cream/paper** (tokens in DESIGN_SYSTEM.md). Font: **Readex Pro** (Latin + Arabic). **No decorative icons** (no icon per category, no emoji). **Functional icons replace sentences**: pen = editable, × = refuse/remove, note = note, undo. If a state can be an icon, it is not a sentence.
+- The reference for screens and flows is `prototype/index.html`. When the prototype and DESIGN_SYSTEM.md disagree, ask.
 - Visual language is **iOS (Apple HIG)**: inset grouped lists, sheets with a grabber, segmented controls, translucent bars, spring motion. No Material patterns (ripples, FABs, floating labels). Follow `docs/DESIGN_SYSTEM.md`.
-- Never use SF Pro font files or SF Symbols: their licence only allows Apple platforms. Use the system font stack + Lucide icons as specified.
+- Never use SF Pro font files or SF Symbols: their licence only allows Apple platforms. Use Readex Pro (self-hosted) + Lucide icons.
 - Inputs use a font size ≥ 16 px (iOS zooms the page on smaller inputs).
 - Avoid ambiguous labels. The owner rejected "Recommander" for this reason. Test labels against "could a tired shop manager misread this?"
 
