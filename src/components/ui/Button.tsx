@@ -59,7 +59,7 @@ const tones: Record<IconTone, string> = {
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string // required: icon-only buttons always have an accessible name
   tone?: IconTone
-  size?: 36 | 42 | 48
+  size?: 36 | 40 | 42 | 48
   badge?: number
 }
 

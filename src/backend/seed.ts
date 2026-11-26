@@ -67,7 +67,7 @@ const ROWS: Row[] = [
   ['noisette', 'ingredients', 'Noisette', 'بندق', 'weight', 250],
   ['sucre', 'ingredients', 'Sucre', 'سكر', 'weight', 1000],
   ['lait', 'ingredients', 'Lait', 'حليب', 'volume', 1000],
-  ['gobelets', 'emballage', 'Gobelets', 'أكواب', 'pack', 1, packs('×50')],
+  ['gobelets', 'emballage', 'Gobelets', 'أكواب', 'pack', 1, packs('50 pcs')],
   ['boites', 'emballage', 'Boîtes pâtisserie', 'علب حلويات', 'count', 10],
 ]
 
