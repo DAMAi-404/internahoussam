@@ -47,7 +47,7 @@ These targets are **assumptions** set to steer design. Replace them with real nu
 | **Shop** (×12) | Shop manager, sometimes other staff | Their own Android phone, sometimes iPhone | Low patience and low tech literacy. Busy, standing, one hand free. Will drop back to WhatsApp at the first friction. Arabic first, product names often in French. |
 | **Owner** (×1) | The owner | Phone (+ PC sometimes) | Every order passes through him. Needs speed, batch actions and reliable notifications. Manages the catalog. |
 | **Deputy** (×1) | Owner's backup | Phone | Validates orders when the owner is unavailable (asleep, travelling). Same review powers, no catalog or account admin. |
-| **Labo** (×2 teams) | Morning team, night team | **One shared tablet**, always on, in a kitchen | Wet or floured hands, noise, gloves. Night shift crosses midnight. The owner must know which team did what. |
+| **Labo** (×2 teams) | Morning team, night team | **One shared device**, always on, in a kitchen. UI is **phone-first** (a phone or a tablet both work) | Wet or floured hands, noise, gloves. Night shift crosses midnight. The owner must know which team did what. |
 
 Full permissions are in [ROLES.md](./ROLES.md).
 

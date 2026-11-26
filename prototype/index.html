@@ -143,33 +143,38 @@ input,textarea,select{font:inherit;font-size:16px;color:var(--ink)}
 .toast{position:absolute;top:14px;inset-inline:16px;z-index:60;background:var(--ink);color:var(--cream);border-radius:16px;padding:13px 16px;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500;box-shadow:0 10px 30px rgba(15,33,23,.35);animation:drop .3s ease-out}
 @keyframes drop{from{transform:translateY(-30px);opacity:0}}
 
-/* labo */
+/* labo (phone-first) */
 .labo{position:absolute;inset:0;display:flex;flex-direction:column;--lb:#ECE3D0;--lc:#F5EFE3;--lt:#1A3524;--lm:#4E6455;--ll:rgba(26,53,36,.12);--lh:#DCCBA4;--lht:#3E3013;background:var(--lb);color:var(--lt)}
 .labo.nuit{--lb:#0F2117;--lc:#1A3524;--lt:#F5EFE3;--lm:#A9BBA9;--ll:rgba(245,239,227,.1);--lh:#275238;--lht:#F5EFE3}
-.lhdr{height:84px;flex-shrink:0;background:var(--lh);color:var(--lht);display:flex;align-items:center;gap:14px;padding:0 22px}
-.lgrid{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;padding:20px 22px;align-content:start}
-.lcard{background:var(--lc);border-radius:22px;display:flex;flex-direction:column;overflow:hidden}
+.lhdr{flex-shrink:0;background:var(--lh);color:var(--lht);display:flex;align-items:center;gap:12px;padding:18px 16px 14px}
+.lhdr .ibtn{background:rgba(127,127,127,.2);color:inherit}
+.llist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:16px}
+.lcard{background:var(--lc);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;text-align:start;width:100%;flex-shrink:0;color:var(--lt)}
 .lcard.new{box-shadow:0 0 0 3px var(--wood)}
-.lline{display:flex;align-items:center;gap:12px;min-height:66px;padding:8px 10px 8px 14px;border-top:1px solid var(--ll);text-align:start;width:100%}
-.ck{width:44px;height:44px;border-radius:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2.5px var(--lm);color:#fff;transition:transform .15s}
+.lbody{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.lgroup{background:var(--lc);border-radius:20px;overflow:hidden;flex-shrink:0}
+.lrow{display:flex;align-items:center}
+.lrow+.lrow{border-top:1px solid var(--ll)}
+.lline{display:flex;align-items:center;gap:12px;min-height:68px;padding:10px 4px 10px 14px;text-align:start;flex:1;min-width:0}
+.ck{width:42px;height:42px;border-radius:21px;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2.5px var(--lm);color:#fff;transition:transform .15s}
 .lline:active .ck{transform:scale(.9)}
-.lname{font-size:19px;font-weight:500;line-height:24px}
-.lqty{font-size:20px;font-weight:600}
+.lname{font-size:17px;font-weight:500;line-height:22px;display:block}
+.lqty{font-size:18px;font-weight:600;white-space:nowrap}
 .ldone .lname,.ldone .lqty{color:var(--lm);text-decoration:line-through}
-.lmore{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:var(--lm)}
-.lclose{margin:12px 14px 14px;height:62px;border-radius:16px;background:var(--sage-deep);color:#F5EFE3;font-size:19px;font-weight:600}
+.lmore{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:var(--lm);flex-shrink:0;margin-inline-end:6px}
+.lfoot{flex-shrink:0;padding:12px 16px 14px;background:var(--lc);border-top:1px solid var(--ll)}
+.lclose{width:100%;height:58px;border-radius:16px;background:var(--sage-deep);color:#F5EFE3;font-size:18px;font-weight:600}
 .lclose:disabled{background:var(--ll);color:var(--lm)}
-.alarm{height:50px;padding:0 20px;border-radius:25px;background:var(--wood);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;animation:pulse 1.4s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(180,124,78,.25)}}
-.hand{position:absolute;inset:0;z-index:70;background:#ECE3D0;color:#1A3524;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;padding:40px 48px;align-content:center}
-.team{height:132px;border-radius:24px;padding:0 26px;display:flex;align-items:center;gap:18px;text-align:start;font-size:24px;font-weight:600;width:100%}
-.key{height:66px;border-radius:18px;background:#F5EFE3;font-size:27px;font-weight:500}
+.alarm{display:flex;align-items:center;gap:10px;background:var(--wood);color:#fff;padding:12px 16px;font-size:16px;font-weight:600;width:100%;flex-shrink:0;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{background:#9C6A40}}
+.hand{position:absolute;inset:0;z-index:70;background:#ECE3D0;color:#1A3524;display:flex;flex-direction:column;gap:14px;padding:26px 20px 20px;overflow-y:auto}
+.team{height:76px;border-radius:20px;padding:0 20px;display:flex;align-items:center;gap:14px;text-align:start;font-size:20px;font-weight:600;width:100%;flex-shrink:0}
+.key{height:58px;border-radius:16px;background:#F5EFE3;font-size:25px;font-weight:500}
 .key:active{background:#E2D6BE}
-.pd{width:18px;height:18px;border-radius:9px;box-shadow:inset 0 0 0 2px #8C8270}
+.pd{width:16px;height:16px;border-radius:8px;box-shadow:inset 0 0 0 2px #8C8270}
 .pd.f{background:#2B6540;box-shadow:none}
 .shake{animation:shake .35s}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@media (max-width:760px){.hand{grid-template-columns:1fr;padding:20px;gap:18px;overflow:auto;align-content:start}.team{height:84px}.lhdr{height:auto;flex-wrap:wrap;padding:12px 16px}.lgrid{grid-template-columns:1fr;padding:14px}}
 </style>
 
 <div id="root"></div>
@@ -542,45 +547,56 @@ function ProductSheet({p:init,lang,onClose,onSave}){const t=T[lang];const [p,set
  <//>`}
 
 /* ================= LABO ================= */
-function LaboApp({S,act,lang}){const t=T[lang];const team=S.labo.team;const [mark,setMark]=useState(null);const [toast,showToast]=useToast();
+function LaboApp({S,act,lang}){const t=T[lang];const team=S.labo.team||'matin';const [mark,setMark]=useState(null);const [openId,setOpenId]=useState(null);const [toast,showToast]=useToast();
  const active=S.orders.filter(o=>['validated','in_preparation'].includes(o.status)).sort((a,b)=>(a.at.validated||0)-(b.at.validated||0));
  const unack=active.filter(o=>o.newForLabo||o.newNote).length;
+ const shopN=o=>nm({fr:SHOPS[o.shop][0],ar:SHOPS[o.shop][1]},lang);
  const tick=(o,l)=>act(n=>{const x=n.orders.find(y=>y.id===o.id);const z=x.lines.find(w=>w.id===l.id);if(z.prep==='todo'){z.prep='done';z.prepTeam=n.labo.team}else{z.prep='todo';z.prepQty=null;z.laboNote=''}
-   x.newForLabo=false;if(x.status==='validated'){x.status='in_preparation';x.at.in_preparation=now();x.events.push({type:'prep_started',at:now(),by:'labo',team:n.labo.team})}x.events.push({type:'line_prepped',at:now(),by:'labo',team:n.labo.team})});
- const closeO=o=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='ready';x.at.ready=now();x.readyTeam=n.labo.team;x.events.push({type:'ready',at:now(),by:'labo',team:n.labo.team});n.notif.owner++;n.notif.shop++});showToast(t.closedToast)};
- return html`<div className=${'labo '+(team||'matin')}>
-  <header className="lhdr"><${Icon} n=${team==='nuit'?'moon':'sun'} s=${30}/><div><div style=${{fontSize:24,fontWeight:600}}>${t[team||'matin']}</div><div className="num" style=${{fontSize:14,opacity:.75}}>${t.since} ${hhmm(S.labo.since)}</div></div>
-   <button className="ibtn" style=${{background:'rgba(127,127,127,.18)',color:'inherit'}} aria-label=${t.handover} onClick=${()=>act(n=>{n.labo.handover=true})}><${Icon} n="users"/></button>
-   <span className="sp"></span>
-   ${unack>0&&html`<button className="alarm" onClick=${()=>act(n=>n.orders.forEach(o=>{o.newForLabo=false;o.newNote=false}))}><${Icon} n="bell"/>${t.newOrder} · ${unack}</button>`}
-  </header>
-  <div className="lgrid">
-   ${active.length===0&&html`<div className="empty" style=${{gridColumn:'1/-1',color:'var(--lm)'}}><span className="ec" style=${{background:'var(--lc)'}}><${Icon} n="check"/></span>${t.nothingLive}</div>`}
-   ${active.map(o=>{const c=o.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;const all=done===c.length;
-    return html`<article key=${o.id} className=${'lcard'+(o.newForLabo?' new':'')}>
-     <div style=${{padding:'16px 16px 12px',display:'flex',flexDirection:'column',gap:8}}>
-      <div className="row"><h2 style=${{margin:0,fontSize:25,fontWeight:600}} className="sp">${nm({fr:SHOPS[o.shop][0],ar:SHOPS[o.shop][1]},lang)}</h2>
-       ${o.team&&o.team!==team&&html`<${Icon} n=${o.team==='nuit'?'moon':'sun'} s=${18}/>`}<span className="num" style=${{fontSize:18,fontWeight:600,color:'var(--lm)'}}>${done}/${c.length}</span></div>
-      <div className="prog" style=${{background:'var(--ll)'}}><b style=${{width:`${c.length?done/c.length*100:0}%`,background:all?'#6BAA75':'#3E8A99'}}></b></div>
-      ${(o.labNote||o.notes.some(n=>!n.lineId))&&html`<div className="bubble" style=${o.newNote?{boxShadow:'0 0 0 2px #B47C4E'}:null}><${Icon} n="note" s=${18}/><span>${[o.labNote,...o.notes.filter(n=>!n.lineId).map(n=>n.text)].filter(Boolean).join(' · ')}</span></div>`}
-     </div>
-     ${c.map(l=>{const st=l.prep;const notes=[l.ownerNote,...o.notes.filter(n=>n.lineId===l.id).map(n=>n.text)].filter(Boolean);
-      return html`<div key=${l.id} className=${'row'+(st==='done'?' ldone':'')} style=${{borderTop:'1px solid var(--ll)'}}>
-       <button className="lline" style=${{borderTop:0}} onClick=${()=>tick(o,l)} aria-pressed=${st!=='todo'}>
-        <span className="ck" style=${st==='done'?{background:'#6BAA75',boxShadow:'none',color:'#1A3524'}:st==='partial'?{background:'#B47C4E',boxShadow:'none'}:st==='not_done'?{background:'#D0574A',boxShadow:'none'}:null}>
-         ${st==='done'&&html`<${Icon} n="check" s=${24} w=${3}/>`}${st==='partial'&&html`<${Icon} n="minus" s=${24} w=${3}/>`}${st==='not_done'&&html`<${Icon} n="x" s=${24} w=${3}/>`}</span>
-        <span className="sp"><span className="lname" style=${{display:'block'}}>${nm(l,lang)}</span>
-         ${l.laboNote&&html`<span style=${{display:'block',fontSize:14,color:st==='not_done'?'#E58A7E':'#D7A06F',fontWeight:500}}>${st==='partial'?`${fq(l.mode,l.prepQty,l.pack)} · `:''}${l.laboNote}</span>`}
-         ${notes.map((x,i)=>html`<span key=${i} style=${{display:'flex',gap:5,alignItems:'center',fontSize:14,color:'var(--lm)'}}><${Icon} n="note" s=${14}/>${x}</span>`)}</span>
-        <bdi className="lqty num">${fq(l.mode,l.appr,l.pack)}</bdi></button>
-       <button className="lmore" aria-label=${t.partial} onClick=${()=>setMark({o,l})}><${Icon} n="more"/></button></div>`})}
-     <button className="lclose" disabled=${!all} onClick=${()=>closeO(o)}>${t.close}</button>
-    </article>`})}
-  </div>
+   x.newForLabo=false;x.newNote=false;if(x.status==='validated'){x.status='in_preparation';x.at.in_preparation=now();x.events.push({type:'prep_started',at:now(),by:'labo',team:n.labo.team})}x.events.push({type:'line_prepped',at:now(),by:'labo',team:n.labo.team})});
+ const closeO=o=>{act(n=>{const x=n.orders.find(y=>y.id===o.id);x.status='ready';x.at.ready=now();x.readyTeam=n.labo.team;x.events.push({type:'ready',at:now(),by:'labo',team:n.labo.team});n.notif.owner++;n.notif.shop++});setOpenId(null);showToast(t.closedToast)};
+ const o=openId&&active.find(x=>x.id===openId);
+ const head=html`<header className="lhdr">
+   ${o?html`<button className="ibtn" aria-label="back" onClick=${()=>setOpenId(null)}><${Icon} n="back" cls="flip"/></button>
+     <div className="sp"><div style=${{fontSize:23,fontWeight:600,lineHeight:'28px'}}>${shopN(o)}</div><div className="num" style=${{fontSize:13,opacity:.75}}>${o.code}</div></div>`
+   :html`<${Icon} n=${team==='nuit'?'moon':'sun'} s=${28}/><div className="sp"><div style=${{fontSize:23,fontWeight:600,lineHeight:'28px'}}>${t[team]}</div><div className="num" style=${{fontSize:13,opacity:.75}}>${t.since} ${hhmm(S.labo.since)}</div></div>
+     <button className="ibtn" aria-label=${t.handover} onClick=${()=>act(n=>{n.labo.handover=true})}><${Icon} n="users"/></button>`}
+  </header>`;
+ return html`<div className=${'labo '+team}>
+  ${head}
+  ${!o&&unack>0&&html`<button className="alarm" onClick=${()=>act(n=>n.orders.forEach(x=>{x.newForLabo=false;x.newNote=false}))}><${Icon} n="bell"/><span className="sp" style=${{textAlign:'start'}}>${t.newOrder} · ${unack}</span><${Icon} n="check"/></button>`}
+  ${!o?html`<div className="llist">
+   ${active.length===0&&html`<div className="empty" style=${{color:'var(--lm)'}}><span className="ec" style=${{background:'var(--lc)'}}><${Icon} n="check"/></span>${t.nothingLive}</div>`}
+   ${active.map(x=>{const c=x.lines.filter(l=>l.decision!=='refused');const done=c.filter(l=>l.prep!=='todo').length;const notes=x.labNote||x.notes.length>0||x.lines.some(l=>l.ownerNote);
+    return html`<button key=${x.id} className=${'lcard'+(x.newForLabo?' new':'')} onClick=${()=>{setOpenId(x.id);act(n=>{const y=n.orders.find(z=>z.id===x.id);y.newForLabo=false;y.newNote=false})}}>
+     <div className="row"><span className="sp" style=${{fontSize:21,fontWeight:600}}>${shopN(x)}</span>
+      ${x.newForLabo&&html`<span className="pill" style=${{background:'#F2DFC9',color:'#7A4A22'}}><i style=${{background:'#B47C4E'}}></i>${t.newOrder}</span>`}
+      ${notes&&html`<span style=${{color:x.newNote?'#B47C4E':'var(--lm)',display:'flex'}} aria-label=${t.noteLabo}><${Icon} n="note" s=${20}/></span>`}
+      ${x.team&&x.team!==team&&html`<span style=${{color:'var(--lm)',display:'flex'}}><${Icon} n=${x.team==='nuit'?'moon':'sun'} s=${18}/></span>`}</div>
+     <div className="row" style=${{fontSize:14,color:'var(--lm)'}}><span className="num">${done}/${c.length}</span><span className="sp"></span><${Icon} n="clock" s=${15}/><span className="num">${ago(x.at.validated||x.createdAt,t)}</span></div>
+     <div className="prog" style=${{background:'var(--ll)'}}><b style=${{width:`${c.length?done/c.length*100:0}%`,background:done===c.length?'#6BAA75':'#3E8A99'}}></b></div>
+    </button>`})}
+  </div>`:html`<${LaboOrder} o=${o} t=${t} lang=${lang} tick=${tick} onMore=${l=>setMark({o,l})}/>
+   ${(()=>{const c=o.lines.filter(l=>l.decision!=='refused');const left=c.filter(l=>l.prep==='todo').length;
+     return html`<div className="lfoot"><button className="lclose" disabled=${left>0} onClick=${()=>closeO(o)}>${left>0?html`<span className="num">${c.length-left}/${c.length}</span>`:t.close}</button></div>`})()}`}
   ${mark&&html`<${MarkSheet} l=${mark.l} t=${t} lang=${lang} onClose=${()=>setMark(null)} onSave=${(prep,qty,note)=>{act(n=>{const x=n.orders.find(y=>y.id===mark.o.id);const z=x.lines.find(w=>w.id===mark.l.id);
      z.prep=prep;z.prepQty=prep==='partial'?qty:null;z.laboNote=note;z.prepTeam=n.labo.team;x.newForLabo=false;if(x.status==='validated'){x.status='in_preparation';x.at.in_preparation=now()}x.events.push({type:'line_'+prep,at:now(),by:'labo',team:n.labo.team})});setMark(null)}}/>`}
-  ${(S.labo.handover||!team)&&html`<${Handover} t=${t} lang=${lang} onDone=${tm=>act(n=>{n.labo.team=tm;n.labo.since=now();n.labo.handover=false})}/>`}
+  ${(S.labo.handover||!S.labo.team)&&html`<${Handover} t=${t} lang=${lang} onDone=${tm=>act(n=>{n.labo.team=tm;n.labo.since=now();n.labo.handover=false})}/>`}
   <${Toast} msg=${toast}/>
+ </div>`}
+
+function LaboOrder({o,t,lang,tick,onMore}){const c=o.lines.filter(l=>l.decision!=='refused');const orderNotes=[o.labNote,...o.notes.filter(n=>!n.lineId).map(n=>n.text)].filter(Boolean);
+ return html`<div className="lbody">
+  ${orderNotes.length>0&&html`<div className="bubble"><${Icon} n="note" s=${18}/><span>${orderNotes.join(' · ')}</span></div>`}
+  <div className="lgroup">${c.map(l=>{const st=l.prep;const notes=[l.ownerNote,...o.notes.filter(n=>n.lineId===l.id).map(n=>n.text)].filter(Boolean);
+   return html`<div key=${l.id} className=${'lrow'+(st==='done'?' ldone':'')}>
+    <button className="lline" onClick=${()=>tick(o,l)} aria-pressed=${st!=='todo'}>
+     <span className="ck" style=${st==='done'?{background:'#6BAA75',boxShadow:'none',color:'#1A3524'}:st==='partial'?{background:'#B47C4E',boxShadow:'none'}:st==='not_done'?{background:'#D0574A',boxShadow:'none'}:null}>
+      ${st==='done'&&html`<${Icon} n="check" s=${22} w=${3}/>`}${st==='partial'&&html`<${Icon} n="minus" s=${22} w=${3}/>`}${st==='not_done'&&html`<${Icon} n="x" s=${22} w=${3}/>`}</span>
+     <span className="sp"><span className="lname">${nm(l,lang)}</span>
+      ${l.laboNote&&html`<span style=${{display:'block',fontSize:13,color:st==='not_done'?'#D0574A':'#B47C4E',fontWeight:500}}>${st==='partial'?`${fq(l.mode,l.prepQty,l.pack)} · `:''}${l.laboNote}</span>`}
+      ${notes.map((x,i)=>html`<span key=${i} style=${{display:'flex',gap:5,alignItems:'center',fontSize:13,color:'var(--lm)'}}><${Icon} n="note" s=${13}/>${x}</span>`)}</span>
+     <bdi className="lqty num">${fq(l.mode,l.appr,l.pack)}</bdi></button>
+    <button className="lmore" aria-label=${t.partial} onClick=${()=>onMore(l)}><${Icon} n="more"/></button></div>`})}</div>
  </div>`}
 
 function MarkSheet({l,t,lang,onClose,onSave}){const [kind,setKind]=useState('partial');const half=Math.max(l.step,Math.floor(l.appr/2/l.step)*l.step);const [qty,setQty]=useState(Math.min(half,l.appr-l.step)||l.step);const [r,setR]=useState('');const [txt,setTxt]=useState('');
@@ -595,21 +611,17 @@ function MarkSheet({l,t,lang,onClose,onSave}){const [kind,setKind]=useState('par
 function Handover({t,onDone}){const [tm,setTm]=useState(teamByHour());const [pin,setPin]=useState('');const [err,setErr]=useState(false);
  const press=d=>{if(pin.length>=4)return;const p=pin+d;setPin(p);setErr(false);if(p.length===4){setTimeout(()=>{if(p===PINS[tm]){onDone(tm)}else{setErr(true);setPin('')}},180)}};
  return html`<div className="hand" role="dialog" aria-label=${t.handover}>
-  <div style=${{display:'flex',flexDirection:'column',gap:16}}>
-   <div><div style=${{fontSize:16,color:'#4E6455',fontWeight:500}}>${t.handover}</div><h2 style=${{margin:'4px 0 0',fontSize:34,fontWeight:600}}>${t.who}</h2></div>
-   ${['matin','nuit'].map(k=>html`<button key=${k} className="team" aria-pressed=${tm===k} onClick=${()=>{setTm(k);setPin('');setErr(false)}}
-     style=${k==='matin'?{background:'#DCCBA4',color:'#3E3013',boxShadow:tm===k?'0 0 0 4px #ECE3D0,0 0 0 7px #2B6540':'none'}:{background:'#1A3524',color:'#F5EFE3',boxShadow:tm===k?'0 0 0 4px #ECE3D0,0 0 0 7px #6BAA75':'none'}}>
-     <${Icon} n=${k==='matin'?'sun':'moon'} s=${36}/><span className="sp">${t[k]}</span><span className="num" style=${{fontSize:16,opacity:.75}}>${k==='matin'?'04:00–16:00':'16:00–04:00'}</span></button>`)}
-   <span style=${{fontSize:13,color:'#4E6455'}}>${t.demo}</span>
+  <div><div style=${{fontSize:14,color:'#4E6455',fontWeight:500}}>${t.handover}</div><h2 style=${{margin:'2px 0 0',fontSize:28,fontWeight:600}}>${t.who}</h2></div>
+  ${['matin','nuit'].map(k=>html`<button key=${k} className="team" aria-pressed=${tm===k} onClick=${()=>{setTm(k);setPin('');setErr(false)}}
+    style=${k==='matin'?{background:'#DCCBA4',color:'#3E3013',boxShadow:tm===k?'0 0 0 3px #ECE3D0,0 0 0 6px #2B6540':'none'}:{background:'#1A3524',color:'#F5EFE3',boxShadow:tm===k?'0 0 0 3px #ECE3D0,0 0 0 6px #6BAA75':'none'}}>
+    <${Icon} n=${k==='matin'?'sun':'moon'} s=${28}/><span className="sp">${t[k]}</span><span className="num" style=${{fontSize:14,opacity:.75}}>${k==='matin'?'04:00–16:00':'16:00–04:00'}</span></button>`)}
+  <div className=${err?'shake':''} style=${{display:'flex',gap:16,justifyContent:'center',paddingTop:6}}>${[0,1,2,3].map(i=>html`<span key=${i} className=${'pd'+(i<pin.length?' f':'')}></span>`)}</div>
+  <div style=${{textAlign:'center',color:'#9B2C1F',fontSize:14,minHeight:18,fontWeight:500}}>${err?t.wrong:''}</div>
+  <div dir="ltr" style=${{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:10}}>
+   ${['1','2','3','4','5','6','7','8','9'].map(d=>html`<button key=${d} className="key num" onClick=${()=>press(d)}>${d}</button>`)}
+   <span></span><button className="key num" onClick=${()=>press('0')}>0</button><button className="key" aria-label="delete" style=${{background:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}} onClick=${()=>setPin(pin.slice(0,-1))}><${Icon} n="del" s=${24}/></button>
   </div>
-  <div style=${{display:'flex',flexDirection:'column',gap:16}}>
-   <div className=${err?'shake':''} style=${{display:'flex',gap:16,justifyContent:'center',padding:'8px 0'}}>${[0,1,2,3].map(i=>html`<span key=${i} className=${'pd'+(i<pin.length?' f':'')}></span>`)}</div>
-   <div style=${{textAlign:'center',color:'#9B2C1F',fontSize:15,minHeight:20,fontWeight:500}}>${err?t.wrong:''}</div>
-   <div dir="ltr" style=${{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:10}}>
-    ${['1','2','3','4','5','6','7','8','9'].map(d=>html`<button key=${d} className="key num" onClick=${()=>press(d)}>${d}</button>`)}
-    <span></span><button className="key num" onClick=${()=>press('0')}>0</button><button className="key" aria-label="delete" style=${{background:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}} onClick=${()=>setPin(pin.slice(0,-1))}><${Icon} n="del" s=${26}/></button>
-   </div>
-  </div>
+  <span style=${{fontSize:12,color:'#4E6455',textAlign:'center'}}>${t.demo}</span>
  </div>`}
 
 /* ================= ROOT ================= */
@@ -628,7 +640,7 @@ function App(){const [S,setS]=useState(load);
    ${role==='labo'&&html`<button className="ghost" onClick=${()=>act(n=>{n.labo.handover=true})}>${t.sim}</button>`}
    <button className="ghost" onClick=${()=>setS(seed())}>${t.reset}</button>
   </div>
-  <div className=${'device'+(role==='labo'?' tablet':'')} dir=${lang==='ar'?'rtl':'ltr'} lang=${lang}>
+  <div className="device" dir=${lang==='ar'?'rtl':'ltr'} lang=${lang}>
    ${role==='shop'&&html`<${ShopApp} S=${S} act=${act} lang=${lang}/>`}
    ${role==='owner'&&html`<${OwnerApp} S=${S} act=${act} lang=${lang}/>`}
    ${role==='labo'&&html`<${LaboApp} S=${S} act=${act} lang=${lang}/>`}

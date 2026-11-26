@@ -87,7 +87,7 @@ The handover screen (team picker + 4-digit PIN) blocks the tablet at 04:00 and 1
 | `meta` | 13 / 18 | 400–500 | Time, counts, eyebrow |
 | `tab` | 11 | 500 | Tab bar labels (the only text below 13) |
 
-Labo: names 19, quantities 20, shop 25.
+Labo: names 17, quantities 18, shop 21–23.
 
 ## 4. Shape & depth
 
@@ -97,10 +97,12 @@ Labo: names 19, quantities 20, shop 25.
 
 ## 5. Layout
 
-| | Phone (shop, owner) | Labo tablet |
+| | Phone (shop, owner) | Labo (phone-first) |
 |---|---|---|
-| Structure | Ink header (title + filters) → scrolling content → cream tab bar | Team header → order columns (auto-fill ≥ 310 px) |
-| Touch targets | ≥ 42 px icons, 54 px primary | ≥ 44 px ticks in 66 px rows, 62 px close |
+| Structure | Ink header (title + filters) → scrolling content → cream tab bar | Team header → **order list** (cards: shop, x/y, time, new/note markers) → tap → **full-screen order** (big tick rows) with the close button at the bottom |
+| Touch targets | ≥ 42 px icons, 54 px primary | 42 px ticks in 68 px rows, 58 px close |
+
+The labo is designed for a **phone first**. On a tablet the same screens are shown. A multi-column board for wide screens is a later enhancement, not V1.
 
 Tab bars:
 - **Shop:** Commander · Commandes (badge = ready orders)
