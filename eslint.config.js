@@ -12,6 +12,7 @@ export default defineConfig(
     languageOptions: { ecmaVersion: 2023, globals: { ...globals.browser, ...globals.serviceworker } },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
       // RTL: physical Tailwind spacing/position classes are banned (CLAUDE.md > UI).
       'no-restricted-syntax': [
         'error',
@@ -21,5 +22,10 @@ export default defineConfig(
         },
       ],
     },
+  },
+  {
+    // Tests may assert presence with `!` after checking it.
+    files: ['**/*.test.ts'],
+    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
 )
