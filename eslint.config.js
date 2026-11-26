@@ -2,16 +2,15 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
+import { defineConfig } from 'eslint/config'
 
-export default tseslint.config(
+export default defineConfig(
   { ignores: ['dist', 'dev-dist', 'prototype', 'supabase/functions', 'node_modules'] },
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [js.configs.recommended, ...tseslint.configs.strict],
-    languageOptions: { ecmaVersion: 2022, globals: { ...globals.browser, ...globals.serviceworker } },
-    plugins: { 'react-hooks': reactHooks },
+    extends: [js.configs.recommended, ...tseslint.configs.strict, reactHooks.configs.flat['recommended-latest']],
+    languageOptions: { ecmaVersion: 2023, globals: { ...globals.browser, ...globals.serviceworker } },
     rules: {
-      ...reactHooks.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'error',
       // RTL: physical Tailwind spacing/position classes are banned (CLAUDE.md > UI).
       'no-restricted-syntax': [

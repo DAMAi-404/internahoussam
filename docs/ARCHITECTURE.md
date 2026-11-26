@@ -4,8 +4,8 @@
 
 | Concern | Choice | Why | Rejected alternative |
 |---|---|---|---|
-| Client | **React 18 + TypeScript + Vite**, single PWA with role-based routes | No SEO or SSR needs, so a static SPA is simplest. One codebase serves all three roles. | Next.js (SSR adds no value here and makes offline/PWA harder); native apps (store friction and 3× the work) |
-| Styling | **Tailwind CSS** + iOS-style tokens from [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md), **Radix UI** primitives | Fast, consistent, accessible primitives. Logical properties give RTL support. | MUI (Material look, the opposite of the iOS style chosen) |
+| Client | **React 19 + TypeScript 6 + Vite 8**, React Router 8, single PWA with role-based routes | No SEO or SSR needs, so a static SPA is simplest. One codebase serves all three roles. | Next.js (SSR adds no value here and makes offline/PWA harder); native apps (store friction and 3× the work) |
+| Styling | **Tailwind CSS 4** (CSS-first: tokens in `src/styles/tokens.css`, exposed via `@theme` in `src/styles/index.css`) | Fast, consistent, accessible primitives. Logical properties give RTL support. | MUI (Material look, the opposite of the iOS style chosen) |
 | Sheets & motion | **Vaul** (iOS-style drawer: drag, snap points, rubber-band) + **Motion** (spring animations) | The bottom sheet is the core shop interaction and has to feel native | Hand-rolled sheet (gesture physics are hard to get right) |
 | Server state | **TanStack Query** | Caching, retries, refetch on focus/reconnect, optimistic updates | Hand-rolled fetch logic |
 | Local state | **Zustand** (cart, UI) persisted to **IndexedDB** (`idb-keyval`) | Cart must survive app kills | localStorage (size limit and synchronous) |
@@ -19,6 +19,25 @@
 | Testing | Vitest (unit), **pgTAP** (RLS + RPC), **Playwright** (E2E across three roles) | The critical risk is data correctness, so the DB is tested directly | — |
 
 **Cost:** starts on the **Supabase free tier** (owner's decision). It stays inside the limits thanks to the 30-day purge (§10). The free tier's missing backups are covered by a nightly `pg_dump` GitHub Action. Upgrade path: Supabase Pro (≈ $25/month, verify current pricing) if the app needs longer history or point-in-time recovery. Cloudflare Pages: free.
+
+### Versions (2026-11-26)
+
+Rule: the **newest stable version that is at least two weeks old and compatible with the rest**, pinned exactly in `package.json`. Re-evaluated on each phase.
+
+| Package | Version | Note |
+|---|---|---|
+| react / react-dom | 19.3.1 | |
+| react-router | 8.5.1 | replaces `react-router-dom` |
+| vite / @vitejs/plugin-react | 8.3.8 / 6.3.0 | 8.4.0 was released the same day, so skipped |
+| tailwindcss / @tailwindcss/vite | 4.3.5 | |
+| typescript | **6.0.3** | not 7.x: `typescript-eslint` supports TypeScript < 6.1 only |
+| vitest | 5.1.0 | |
+| vite-plugin-pwa / workbox | 2.0.0 / 7.4.1 | |
+| eslint / typescript-eslint / react-hooks | 10.14.0 / 8.72.2 / 7.1.1 | |
+| @tanstack/react-query | 5.107.1 | |
+| i18next / react-i18next | 27.1.1 / 18.0.1 | |
+| @supabase/supabase-js | 2.119.0 | |
+| Node | 22 (CI and local) | `@types/node` 22 to match |
 
 ## 2. System overview
 
@@ -244,7 +263,7 @@ Scaffolded in Phase 0. Every folder exists in the repo; `features/*/README.md` l
 ```
 /
 ├─ CLAUDE.md · README.md · package.json · pnpm-lock.yaml
-├─ index.html · vite.config.ts · tsconfig*.json · tailwind.config.ts · postcss.config.js · eslint.config.js
+├─ index.html · vite.config.ts · tsconfig*.json · eslint.config.js   (no tailwind/postcss config: Tailwind 4 is configured in CSS)
 ├─ .env.example                      VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_VAPID_PUBLIC_KEY
 ├─ docs/                             PRD · ARCHITECTURE · DESIGN_SYSTEM · ROLES
 ├─ prototype/index.html              visual reference (v0, superseded by docs where they differ)

@@ -260,12 +260,13 @@ stateDiagram-v2
 
 | Phase | Content | Exit |
 |---|---|---|
-| 0 Foundations | Repo scaffold, CI, Supabase project, schema + RLS + RPCs + tests, seed, logins | pgTAP green |
+| 0 Foundations | Repo scaffold, CI, schema + RLS + RPCs + tests (local Postgres), seed | pgTAP green |
 | 1 Catalogue | Owner product CRUD, photos, packs, availability | Real catalogue entered |
 | 2 Ordering | Shop catalogue, product sheet, cart, offline send, my orders | 0 duplicate/lost orders in chaos tests |
 | 3 Review & follow-up | Inbox, review, Suivi filters, notes | E2E flow on staging |
 | 4 Labo | Phone-first list/detail, problem sheet, handover | Real shift dry-run |
 | 5 Notifications | Push, centre, badges, sounds | Push received on all pilot phones |
+| 8 Go live on Supabase | Owner creates the Supabase project (Paris); migrations applied, logins created, env set, deploy | Smoke test on real phones |
 | **Pilot** | 2 shops, 1 week, "Partager" as fallback | §3 measured |
 | 6 Stats & retention | Aggregates, Activité, shop stats, purge, backup | Month view correct after a purge |
 | 7 Rollout | Remaining 10 shops in 2–3 waves | WhatsApp ordering stopped |
@@ -277,11 +278,11 @@ stateDiagram-v2
 | 11-25 | Deputy role (1). Several orders/day. Unavailable = greyed. Team only, no names. 04:00/16:00 shifts. Owner sets team PINs. Arabic + French. |
 | 11-25 | No "Recommander", no export, no quick-value buttons. 30-day retention on the free tier + nightly backup. |
 | 11-25 | Brand palette and Readex Pro. Functional icons replace sentences. Auto-accept review with pen / note / ×. |
+| 11-26 | Q15: **keep** daily statistics 13 months. Libraries: newest stable ≥ 2 weeks old (ARCHITECTURE §1). **Supabase project is created by the owner as the final step**; everything is built and tested before it. The design must be impressive and well built. |
 | 11-26 | Labo phone-first. Uniform cards; quantity as a badge on the photo; "+" opens the product sheet with an optional short description. Shop can edit **and delete** while waiting. Grouped lists (new first) for shop and labo. Owner "Suivi" filters. Statistics for owner and shop. Notes as floating bubbles with length limits. Notification matrix. |
 
 ### Open
 
 | # | Question | Default |
 |---|---|---|
-| Q15 | Statistics: keep daily aggregates 13 months (≈ 10–30 MB, estimate)? | Yes |
 | Q16 | Should the owner be able to mute some push types? | No (V1 matrix is fixed) |

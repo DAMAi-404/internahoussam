@@ -67,7 +67,7 @@ If code and docs disagree, stop and ask. Update the doc in the same PR when a de
 - Touch targets ≥ 44 px (labo rows ≥ 68 px). One primary action per screen, at the bottom.
 - CSS logical properties only (`ms-`, `pe-`, `start-`). Must work in RTL. Number+unit in `<bdi>`.
 - Every user-facing string goes through i18n with both `fr` and `ar` keys.
-- Brand tokens and **Readex Pro** only (self-hosted). Lucide icons. Never SF Pro or SF Symbols (Apple-only licence).
+- Brand tokens and **Readex Pro** only (self-hosted). Tokens live in `src/styles/tokens.css` and are exposed to Tailwind 4 via `@theme` in `src/styles/index.css` (no `tailwind.config`). Lucide icons. Never SF Pro or SF Symbols (Apple-only licence).
 - Inputs ≥ 16 px font (iOS zoom). Avoid ambiguous labels ("Recommander" was rejected): could a tired shop manager misread it?
 
 ## Conventions

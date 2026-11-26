@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router'
 import { StatusPill } from '@/components/ui/StatusPill'
 import { ORDER_STATUSES } from '@/lib/status'
 import { setLang, type Lang } from '@/lib/i18n'

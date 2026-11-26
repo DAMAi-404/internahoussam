@@ -28,11 +28,11 @@ Shops: El Madania, 1er Mai, Sidi Abdelah, Kouba, Rouiba, Birtouta, Boulevard, A�
 
 ## Stack
 
-React 18 + TypeScript + Vite (PWA) · Tailwind CSS · TanStack Query · Zustand + IndexedDB · i18next (fr/ar) · Supabase (Postgres, Auth, Realtime, Storage, Edge Functions) · Web Push · Cloudflare Pages.
+React 19 + TypeScript 6 + Vite 8 (PWA) · Tailwind CSS 4 · React Router 8 · TanStack Query · Zustand + IndexedDB · i18next (fr/ar) · Supabase (Postgres, Auth, Realtime, Storage, Edge Functions) · Web Push · Cloudflare Pages.
 
 ## Getting started
 
-Requires Node 20+ and pnpm. The database part also needs the Supabase CLI and Docker.
+Requires Node 22+ and pnpm. The database part also needs the Supabase CLI and Docker.
 
 ```bash
 pnpm install

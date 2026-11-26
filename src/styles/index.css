@@ -1,8 +1,57 @@
+@import 'tailwindcss';
 @import './tokens.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * Tailwind 4: the design tokens (src/styles/tokens.css, DESIGN_SYSTEM §2) are exposed as utilities here.
+ * `inline` keeps the var() reference so theme switches (labo night) apply at runtime.
+ * Use logical utilities only (ms-, me-, ps-, pe-, start-, end-): the app must work in RTL.
+ */
+@theme inline {
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-sage-mid: var(--sage-mid);
+  --color-sage-deep: var(--sage-deep);
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
+  --color-ink-soft: var(--ink-soft);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-wood: var(--wood);
+  --color-blush: var(--blush);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface-bg);
+  --color-card: var(--surface-card);
+  --color-fg: var(--surface-text);
+  --color-fg-muted: var(--surface-muted);
+}
+
+@theme {
+  --font-sans: 'Readex Pro', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  --text-tab: 11px;
+  --text-tab--line-height: 14px;
+  --text-meta: 13px;
+  --text-meta--line-height: 18px;
+  --text-card: 15px;
+  --text-card--line-height: 20px;
+  --text-body: 16px;
+  --text-body--line-height: 22px;
+  --text-code: 18px;
+  --text-code--line-height: 24px;
+  --text-sheet: 21px;
+  --text-sheet--line-height: 26px;
+  --text-title-sm: 22px;
+  --text-title-sm--line-height: 28px;
+  --text-title: 27px;
+  --text-title--line-height: 32px;
+
+  --radius-card: 22px;
+  --radius-group: 20px;
+  --radius-sheet: 26px;
+  --radius-btn: 16px;
+}
 
 @layer base {
   html,
@@ -14,7 +63,7 @@
     margin: 0;
     background: var(--surface-bg);
     color: var(--surface-text);
-    font-family: 'Readex Pro', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: contain;
@@ -24,9 +73,10 @@
   select {
     font-size: 16px; /* below 16px iOS zooms the page on focus */
   }
-  button:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible {
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
     outline: 3px solid var(--sage);
     outline-offset: 2px;
   }
@@ -40,22 +90,22 @@
   }
 }
 
-@layer utilities {
-  /* Any text a user typed: never overflows its container (DESIGN_SYSTEM principle 6). */
-  .user-text {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-  .num {
-    font-variant-numeric: tabular-nums;
-  }
-  [dir='rtl'] .flip-rtl {
+/* Any text a user typed: never overflows its container (DESIGN_SYSTEM principle 6). */
+@utility user-text {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+@utility safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@utility flip-rtl {
+  &:where([dir='rtl'], [dir='rtl'] *) {
     transform: scaleX(-1);
-  }
-  .safe-top {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
