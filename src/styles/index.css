@@ -109,3 +109,88 @@
     transform: scaleX(-1);
   }
 }
+
+@keyframes rise-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+@keyframes drop-in {
+  from {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+}
+@keyframes bubble-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+@keyframes shake {
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+@keyframes pulse-wood {
+  50% {
+    box-shadow: 0 0 0 8px rgb(180 124 78 / 0.25);
+  }
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@utility animate-rise {
+  animation: rise-in 0.28s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+@utility animate-drop {
+  animation: drop-in 0.3s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+@utility animate-pop {
+  animation: pop 0.3s ease-out;
+}
+@utility animate-bubble {
+  animation: bubble-in 0.15s ease-out both;
+}
+@utility animate-shake {
+  animation: shake 0.35s;
+}
+@utility animate-pulse-wood {
+  animation: pulse-wood 1.4s infinite;
+}
+@utility skeleton {
+  background: linear-gradient(90deg, var(--paper-deep) 25%, var(--cream) 50%, var(--paper-deep) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+@utility press {
+  transition: transform 0.12s ease;
+  &:active {
+    transform: scale(0.94);
+  }
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* vaul drawer overlay */
+[data-vaul-overlay] {
+  background: rgb(15 33 23 / 0.45);
+}

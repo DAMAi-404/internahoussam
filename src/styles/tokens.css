@@ -51,6 +51,12 @@
   --header-fg: var(--cream);
 }
 
+/* A themed area paints its own text colour (inherited colours would keep the outer theme's ink). */
+.theme-matin,
+.theme-nuit {
+  color: var(--surface-text);
+}
+
 /* Sheets, bubbles and dialogs always use the light surface, whatever the theme. */
 .surface-light {
   --surface-card: var(--cream);
@@ -59,4 +65,18 @@
   --surface-line: var(--line);
   background: var(--cream);
   color: var(--ink);
+}
+
+/* Category tints for photo placeholders (until the owner adds photos) */
+:root {
+  --cat-glaces: #d3e6cf;
+  --cat-crepes: #ead5be;
+  --cat-kachtouta: #efd2cb;
+  --cat-patisserie: #e6d8bf;
+  --cat-pizza: #edcdb8;
+  --cat-jus: #e4e2bc;
+  --cat-fruits: #d8e7c9;
+  --cat-supplements: #e0d3b8;
+  --cat-ingredients: #d5e1cd;
+  --cat-emballage: #dcd5c6;
 }

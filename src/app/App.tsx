@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { StatusPill } from '@/components/ui/StatusPill'
 import { ORDER_STATUSES } from '@/lib/status'
 import { setLang, type Lang } from '@/lib/i18n'
+import { Gallery } from '@/dev/Gallery'
 
 /**
  * Routes per role. Each role area becomes real in its phase (PRD §11):
@@ -15,6 +16,7 @@ export function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/dev/ui" element={<Gallery />} />
         <Route path="*" element={<ScaffoldHome />} />
       </Routes>
     </BrowserRouter>

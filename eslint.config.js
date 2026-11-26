@@ -25,7 +25,7 @@ export default defineConfig(
   },
   {
     // Tests may assert presence with `!` after checking it.
-    files: ['**/*.test.ts'],
+    files: ['**/*.test.ts', 'src/dev/**'],
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
 )
