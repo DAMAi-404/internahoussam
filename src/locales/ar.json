@@ -1,0 +1,20 @@
+{
+  "app": { "name": "Mahroussa Pro" },
+  "role": { "shop": "المحل", "owner": "المسؤول", "deputy": "النائب", "labo": "اللابو" },
+  "status": {
+    "waiting": "في الانتظار",
+    "accepted": "مقبولة",
+    "preparing": "قيد التحضير",
+    "ready": "جاهزة",
+    "readyToCollect": "جاهزة للاستلام",
+    "received": "تم التسليم",
+    "refused": "مرفوضة",
+    "cancelled": "محذوفة"
+  },
+  "team": { "matin": "الصباح", "nuit": "الليل" },
+  "scaffold": {
+    "title": "المرحلة 0",
+    "body": "الهيكل جاهز. الشاشات تأتي حسب المراحل.",
+    "statuses": "الحالات"
+  }
+}

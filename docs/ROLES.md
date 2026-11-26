@@ -25,7 +25,7 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 |---|---|---|---|---|
 | View categories / products / packs | ✅ | ✅ | ✅ active + greyed inactive | ✅ (names only, for display) |
 | Create / edit product | ✅ | ❌ | ❌ | ❌ |
-| Toggle product / pack availability | ✅ | ✅ *(Q11)* | ❌ | ❌ |
+| Toggle product / pack availability | ✅ | ✅ | ❌ | ❌ |
 | Reorder / hide categories | ✅ | ❌ | ❌ | ❌ |
 
 ### Orders
@@ -33,7 +33,7 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 | Action | owner | deputy | shop | labo |
 |---|---|---|---|---|
 | Create & submit order | ❌ | ❌ | 🔒 own shop | ❌ |
-| Edit / cancel until sent to labo (`submitted`, `in_review`) | ❌ | ❌ | 🔒 own shop | ❌ |
+| Edit / delete until sent to labo (`submitted`, `in_review`) | ❌ | ❌ | 🔒 own shop | ❌ |
 | Add note to an order or line (review, and after validation until `ready`) | ✅ | ✅ | ❌ | ❌ |
 | Change quantities after validation | ❌ | ❌ | ❌ | ❌ |
 | View orders | ✅ all | ✅ all | 🔒 own shop | 🔒 only `validated` / `in_preparation` / `ready` (+ recent history) |
@@ -48,6 +48,14 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 | Confirm received | ❌ | ❌ | 🔒 own | ❌ |
 | View event timeline | ✅ | ✅ | 🔒 own (simplified) | ❌ |
 | Share order as text | ✅ | ✅ | 🔒 own | ❌ |
+
+### Statistics & notifications
+
+| Action | owner | deputy | shop | labo |
+|---|---|---|---|---|
+| View statistics (Activité) | ✅ all shops | ✅ all shops | 🔒 own shop | ❌ |
+| Daily recap (shareable text) | ✅ | ✅ | ❌ | ❌ |
+| Read / mark own notifications | 🔒 own | 🔒 own | 🔒 own | 🔒 own (device) |
 
 ### Administration
 

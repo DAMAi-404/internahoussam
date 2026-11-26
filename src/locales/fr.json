@@ -1,0 +1,20 @@
+{
+  "app": { "name": "Mahroussa Pro" },
+  "role": { "shop": "Boutique", "owner": "Patron", "deputy": "Adjoint", "labo": "Labo" },
+  "status": {
+    "waiting": "En attente",
+    "accepted": "Acceptée",
+    "preparing": "En préparation",
+    "ready": "Prête",
+    "readyToCollect": "Prête à récupérer",
+    "received": "Livrée",
+    "refused": "Refusée",
+    "cancelled": "Supprimée"
+  },
+  "team": { "matin": "Matin", "nuit": "Nuit" },
+  "scaffold": {
+    "title": "Phase 0",
+    "body": "Squelette prêt. Les écrans arrivent par phase.",
+    "statuses": "Statuts"
+  }
+}

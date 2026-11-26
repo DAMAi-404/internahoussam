@@ -1,0 +1,62 @@
+/* Brand tokens: docs/DESIGN_SYSTEM.md §2. Change values here only. */
+:root {
+  --sage: #6baa75;
+  --sage-soft: #86c08f;
+  --sage-mid: #478153;
+  --sage-deep: #2b6540;
+
+  --ink: #1a3524;
+  --ink-deep: #0f2117;
+  --ink-soft: #275238;
+
+  --cream: #f5efe3;
+  --paper: #ece3d0;
+  --paper-deep: #e2d6be;
+  --wood: #b47c4e;
+  --blush: #e7c3bc;
+
+  --muted: #4e6455;
+  --line: rgb(26 53 36 / 0.12);
+
+  /* status pills: background / text / dot (DESIGN_SYSTEM §2.2) */
+  --st-waiting-bg: #f2dfc9;   --st-waiting-fg: #7a4a22;   --st-waiting-dot: #b47c4e;
+  --st-accepted-bg: #dcebd9;  --st-accepted-fg: #2b6540;  --st-accepted-dot: #6baa75;
+  --st-preparing-bg: #d6e7ea; --st-preparing-fg: #1f5e6b; --st-preparing-dot: #3e8a99;
+  --st-ready-bg: #2b6540;     --st-ready-fg: #f5efe3;     --st-ready-dot: #86c08f;
+  --st-done-bg: #e2d6be;      --st-done-fg: #5a5243;      --st-done-dot: #8f8470;
+  --st-refused-bg: #f3d3cc;   --st-refused-fg: #9b2c1f;   --st-refused-dot: #d0574a;
+
+  /* surface roles (overridden by the labo night theme) */
+  --surface-bg: var(--paper);
+  --surface-card: var(--cream);
+  --surface-text: var(--ink);
+  --surface-muted: var(--muted);
+  --surface-line: var(--line);
+  --header-bg: var(--ink);
+  --header-fg: var(--cream);
+}
+
+/* Labo team themes (DESIGN_SYSTEM §2.4) */
+.theme-matin {
+  --header-bg: #dccba4;
+  --header-fg: #3e3013;
+}
+.theme-nuit {
+  --surface-bg: var(--ink-deep);
+  --surface-card: var(--ink);
+  --surface-text: var(--cream);
+  --surface-muted: #a9bba9;
+  --surface-line: rgb(245 239 227 / 0.1);
+  --header-bg: var(--ink-soft);
+  --header-fg: var(--cream);
+}
+
+/* Sheets, bubbles and dialogs always use the light surface, whatever the theme. */
+.surface-light {
+  --surface-card: var(--cream);
+  --surface-text: var(--ink);
+  --surface-muted: var(--muted);
+  --surface-line: var(--line);
+  background: var(--cream);
+  color: var(--ink);
+}
