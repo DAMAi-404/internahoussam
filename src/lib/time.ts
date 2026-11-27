@@ -56,3 +56,23 @@ export function minutesSince(at: Date | string, now: Date = new Date()): number 
   const t = typeof at === 'string' ? new Date(at).getTime() : at.getTime()
   return Math.max(0, Math.floor((now.getTime() - t) / 60_000))
 }
+
+/** Start of the current shift (the last 04:00 or 16:00 in Algiers time) as a UTC Date. Algiers is UTC+1 all year. */
+export function lastShiftStart(at: Date = new Date()): Date {
+  const local = new Date(at.getTime() + 3_600_000) // shift to Algiers wall-clock, read with UTC getters
+  const h = local.getUTCHours()
+  const start = new Date(local)
+  start.setUTCMinutes(0, 0, 0)
+  if (h >= NIGHT_SHIFT_START_HOUR) start.setUTCHours(NIGHT_SHIFT_START_HOUR)
+  else if (h >= BUSINESS_DAY_START_HOUR) start.setUTCHours(BUSINESS_DAY_START_HOUR)
+  else {
+    start.setUTCDate(start.getUTCDate() - 1)
+    start.setUTCHours(NIGHT_SHIFT_START_HOUR)
+  }
+  return new Date(start.getTime() - 3_600_000)
+}
+
+/** True when the labo's active team was confirmed before the current shift started (handover due, PRD LAB-2). */
+export function handoverDue(since: string | null, at: Date = new Date()): boolean {
+  return !since || new Date(since).getTime() < lastShiftStart(at).getTime()
+}

@@ -2,10 +2,13 @@ import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { BackendProvider, useSession } from '@/app/backend'
 import { homeFor } from '@/app/routes'
+import { LaboApp } from '@/app/LaboApp'
 import { OwnerApp } from '@/app/OwnerApp'
 import { ShopApp } from '@/app/ShopApp'
 import { Gallery } from '@/dev/Gallery'
 import { Login } from '@/features/auth/Login'
+import { InstallGuide } from '@/features/notifications/InstallGuide'
+import { NotificationWatcher } from '@/features/notifications/NotificationWatcher'
 import type { Role } from '@/domain/types'
 
 /**
@@ -21,7 +24,7 @@ export function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/shop/*" element={<Gate roles={['shop']}><ShopApp /></Gate>} />
           <Route path="/owner/*" element={<Gate roles={['owner', 'deputy']}><OwnerApp /></Gate>} />
-          <Route path="/labo/*" element={<Gate roles={['labo']}><Placeholder /></Gate>} />
+          <Route path="/labo/*" element={<Gate roles={['labo']}><LaboApp /></Gate>} />
           <Route path="*" element={<Home />} />
         </Routes>
       </BackendProvider>
@@ -40,7 +43,13 @@ function Gate({ roles, children }: { roles: Role[]; children: ReactNode }) {
   if (session.isPending) return <Splash />
   if (!session.data) return <Navigate to="/login" replace />
   if (!roles.includes(session.data.role)) return <Navigate to={homeFor(session.data.role)} replace />
-  return <div className="fixed inset-0 flex flex-col bg-surface text-fg">{children}</div>
+  return (
+    <div className="fixed inset-0 flex flex-col bg-surface text-fg">
+      {children}
+      <NotificationWatcher />
+      <InstallGuide />
+    </div>
+  )
 }
 
 export function Splash() {
@@ -52,8 +61,4 @@ export function Splash() {
       </svg>
     </div>
   )
-}
-
-function Placeholder() {
-  return <Splash />
 }

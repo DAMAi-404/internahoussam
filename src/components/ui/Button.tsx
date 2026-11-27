@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react'
 type Variant = 'primary' | 'tinted' | 'plain' | 'danger' | 'dangerTinted'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-sage-deep text-cream active:bg-ink disabled:bg-paper-deep disabled:text-[#8c8270]',
+  primary: 'bg-sage-deep text-cream active:bg-ink disabled:bg-[color-mix(in_srgb,var(--surface-text)_12%,transparent)] disabled:text-fg-muted',
   tinted: 'bg-[color-mix(in_srgb,var(--sage)_22%,var(--cream))] text-sage-deep disabled:opacity-50',
   plain: 'text-sage-deep disabled:opacity-50',
   danger: 'bg-[#9b2c1f] text-cream disabled:opacity-50',

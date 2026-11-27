@@ -7,6 +7,7 @@ import { Button, Card, ConfirmSheet, EmptyState, ErrorState, Header, IconButton,
 import { laboLines, preparedCount } from '@/domain/orders'
 import type { Order } from '@/domain/types'
 import { NotificationBell } from '@/features/notifications/NotificationBell'
+import { NotificationPermissionCard } from '@/features/notifications/NotificationWatcher'
 import { SettingsButton } from '@/features/auth/SettingsSheet'
 import { useCart } from '@/features/ordering/cart'
 import { isEditableByShop } from '@/lib/status'
@@ -41,6 +42,7 @@ export function OrdersScreen() {
         />
       }
     >
+      <NotificationPermissionCard />
       {orders.isPending ? (
         <SkeletonList />
       ) : orders.isError ? (

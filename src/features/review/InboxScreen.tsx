@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { useNow, useOrders, useSession, useShopName } from '@/app/backend'
 import { Card, EmptyState, ErrorState, Header, Screen, SkeletonList } from '@/components/ui'
 import { NotificationBell } from '@/features/notifications/NotificationBell'
+import { NotificationPermissionCard } from '@/features/notifications/NotificationWatcher'
 import { SettingsButton } from '@/features/auth/SettingsSheet'
 import { ago } from '@/lib/format'
 import { minutesSince } from '@/lib/time'
@@ -36,6 +37,7 @@ export function InboxScreen() {
         />
       }
     >
+      <NotificationPermissionCard />
       {orders.isPending ? (
         <SkeletonList />
       ) : orders.isError ? (

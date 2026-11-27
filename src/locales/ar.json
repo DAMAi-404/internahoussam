@@ -188,7 +188,8 @@
       "order_ready": "{{code}} · جاهزة للاستلام",
       "order_received": "{{shop}} · {{code}} سُلّمت",
       "handover_missing": "اللابو · لم يتم تأكيد تسليم الفريق"
-    }
+    },
+    "enable": "تفعيل الإشعارات"
   },
   "stats": {
     "title": "النشاط",

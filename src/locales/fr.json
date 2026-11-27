@@ -188,7 +188,8 @@
       "order_ready": "{{code}} · prête à récupérer",
       "order_received": "{{shop}} · {{code}} livrée",
       "handover_missing": "Labo · passation non confirmée"
-    }
+    },
+    "enable": "Activer les notifications"
   },
   "stats": {
     "title": "Activité",
