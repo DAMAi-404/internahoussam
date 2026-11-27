@@ -1,4 +1,4 @@
-import { ClipboardList, ShoppingBag } from 'lucide-react'
+import { BarChart3, ClipboardList, ShoppingBag } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router'
@@ -9,13 +9,14 @@ import { CatalogScreen } from '@/features/ordering/CatalogScreen'
 import { useCart } from '@/features/ordering/cart'
 import { OrderDetailScreen } from '@/features/tracking/OrderDetailScreen'
 import { OrdersScreen } from '@/features/tracking/OrdersScreen'
+import { StatsScreen } from '@/features/stats/StatsScreen'
 
 function ShopTabs() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const ready = (useOrders().data ?? []).filter((o) => o.status === 'ready').length
-  const tab = pathname.startsWith('/shop/orders') ? 'orders' : 'order'
+  const tab = pathname.startsWith('/shop/orders') ? 'orders' : pathname.startsWith('/shop/stats') ? 'stats' : 'order'
   return (
     <div className="flex h-full flex-col">
       <div className="min-h-0 flex-1">
@@ -23,10 +24,11 @@ function ShopTabs() {
       </div>
       <TabBar
         value={tab}
-        onChange={(id) => navigate(id === 'orders' ? '/shop/orders' : '/shop')}
+        onChange={(id) => navigate(id === 'order' ? '/shop' : `/shop/${id}`)}
         items={[
           { id: 'order', label: t('catalog.title'), icon: <ShoppingBag size={22} /> },
           { id: 'orders', label: t('orders.title'), icon: <ClipboardList size={22} />, badge: ready, badgeTone: 'ok' },
+          { id: 'stats', label: t('stats.title'), icon: <BarChart3 size={22} /> },
         ]}
       />
     </div>
@@ -44,6 +46,7 @@ export function ShopApp() {
       <Route element={<ShopTabs />}>
         <Route index element={<CatalogScreen />} />
         <Route path="orders" element={<OrdersScreen />} />
+        <Route path="stats" element={<StatsScreen />} />
       </Route>
       <Route path="cart" element={<CartScreen />} />
       <Route path="orders/:id" element={<OrderDetailScreen />} />

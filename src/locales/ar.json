@@ -1,6 +1,14 @@
 {
-  "app": { "name": "Mahroussa Pro", "demo": "تجربة" },
-  "role": { "shop": "المحل", "owner": "المسؤول", "deputy": "النائب", "labo": "اللابو" },
+  "app": {
+    "name": "Mahroussa Pro",
+    "demo": "تجربة"
+  },
+  "role": {
+    "shop": "المحل",
+    "owner": "المسؤول",
+    "deputy": "النائب",
+    "labo": "اللابو"
+  },
   "status": {
     "waiting": "في الانتظار",
     "accepted": "مقبولة",
@@ -11,7 +19,12 @@
     "refused": "مرفوضة",
     "cancelled": "محذوفة"
   },
-  "team": { "matin": "الصباح", "nuit": "الليل", "hours_matin": "04:00 – 16:00", "hours_nuit": "16:00 – 04:00" },
+  "team": {
+    "matin": "الصباح",
+    "nuit": "الليل",
+    "hours_matin": "04:00 – 16:00",
+    "hours_nuit": "16:00 – 04:00"
+  },
   "action": {
     "add": "إضافة",
     "update": "تحديث",
@@ -78,7 +91,12 @@
     "received": "تم الاستلام",
     "pending": "في انتظار الإرسال"
   },
-  "steps": { "sent": "أُرسلت", "accepted": "قُبلت", "preparing": "التحضير", "ready": "جاهزة" },
+  "steps": {
+    "sent": "أُرسلت",
+    "accepted": "قُبلت",
+    "preparing": "التحضير",
+    "ready": "جاهزة"
+  },
   "line": {
     "refused": "مرفوض",
     "done": "تم التحضير",
@@ -95,7 +113,11 @@
     "edited": "المحل عدّل الطلبية",
     "noteForLabo": "ملاحظة للابو",
     "refuseTitle": "رفض · {{name}}",
-    "reasons": ["نفاد", "كمية كبيرة", "ليس اليوم"],
+    "reasons": [
+      "نفاد",
+      "كمية كبيرة",
+      "ليس اليوم"
+    ],
     "other": "سبب آخر…",
     "sent": "أُرسلت إلى اللابو",
     "refused": "رُفضت الطلبية",
@@ -126,7 +148,11 @@
     "partial": "تحضير جزئي",
     "notDone": "لم يُحضَّر",
     "prepared": "المُحضَّر",
-    "reasons": ["نفاد", "لا وقت", "عطل"],
+    "reasons": [
+      "نفاد",
+      "لا وقت",
+      "عطل"
+    ],
     "other": "سبب آخر…",
     "closed": "الطلبية جاهزة",
     "handover": "تسليم الفريق",
@@ -210,7 +236,13 @@
     "android": "اضغط القائمة ⋮ ثم «تثبيت التطبيق».",
     "later": "لاحقاً"
   },
-  "settings": { "title": "الإعدادات", "language": "اللغة", "account": "الحساب", "outbox": "في انتظار الإرسال", "outboxFailed": "رفضه الخادم" },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "account": "الحساب",
+    "outbox": "في انتظار الإرسال",
+    "outboxFailed": "رفضه الخادم"
+  },
   "errors": {
     "forbidden": "عملية غير مسموحة.",
     "not_found": "الطلبية غير موجودة.",
@@ -226,5 +258,61 @@
     "not_signed_in": "انتهت الجلسة. أعد الدخول.",
     "network": "لا يوجد اتصال. أعد المحاولة."
   },
-  "time": { "min": "{{n}} د", "h": "{{n}} س", "now": "الآن" }
+  "time": {
+    "min": "{{n}} د",
+    "h": "{{n}} س",
+    "now": "الآن"
+  },
+  "events": {
+    "submitted": "أُرسلت",
+    "shop_edited": "عدّلها المحل",
+    "cancelled": "حُذفت",
+    "review_started": "فُتحت",
+    "review_released": "أُعيدت للانتظار",
+    "validated": "أُرسلت إلى اللابو",
+    "refused": "رُفضت",
+    "note_added": "أُضيفت ملاحظة",
+    "prep_started": "بدأ التحضير",
+    "line_prepped": "سطر مُحضَّر",
+    "line_problem": "مشكلة في سطر",
+    "ready": "جاهزة",
+    "received": "سُلّمت"
+  },
+  "catalogAdmin": {
+    "title": "المنتجات",
+    "newProduct": "منتج جديد",
+    "photo": "الصورة",
+    "addPhoto": "إضافة صورة",
+    "nameFr": "الاسم (فرنسية)",
+    "nameAr": "الاسم (عربية)",
+    "descFr": "الوصف (فرنسية)",
+    "descAr": "الوصف (عربية)",
+    "category": "الفئة",
+    "type": "النوع",
+    "modes": {
+      "count": "قطعة",
+      "weight": "وزن",
+      "volume": "حجم",
+      "pack": "عبوة"
+    },
+    "step": "الخطوة",
+    "packs": "العبوات",
+    "packPlaceholder": "مثال 5 L",
+    "addPack": "إضافة عبوة",
+    "saved": "تم حفظ المنتج",
+    "readOnly": "المسؤول وحده يعدّل المنتجات",
+    "units": {
+      "count": "pcs",
+      "weight": "g",
+      "volume": "ml"
+    },
+    "photoError": "الصورة كبيرة جداً",
+    "active": "متوفر"
+  },
+  "followup2": {
+    "cancel": "إلغاء الطلبية",
+    "cancelConfirm": "إلغاء هذه الطلبية؟",
+    "cancelled": "أُلغيت الطلبية",
+    "addNote": "ملاحظة للابو"
+  }
 }

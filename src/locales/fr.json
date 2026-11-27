@@ -1,6 +1,14 @@
 {
-  "app": { "name": "Mahroussa Pro", "demo": "Démo" },
-  "role": { "shop": "Boutique", "owner": "Patron", "deputy": "Adjoint", "labo": "Labo" },
+  "app": {
+    "name": "Mahroussa Pro",
+    "demo": "Démo"
+  },
+  "role": {
+    "shop": "Boutique",
+    "owner": "Patron",
+    "deputy": "Adjoint",
+    "labo": "Labo"
+  },
   "status": {
     "waiting": "En attente",
     "accepted": "Acceptée",
@@ -11,7 +19,12 @@
     "refused": "Refusée",
     "cancelled": "Supprimée"
   },
-  "team": { "matin": "Matin", "nuit": "Nuit", "hours_matin": "04:00 – 16:00", "hours_nuit": "16:00 – 04:00" },
+  "team": {
+    "matin": "Matin",
+    "nuit": "Nuit",
+    "hours_matin": "04:00 – 16:00",
+    "hours_nuit": "16:00 – 04:00"
+  },
   "action": {
     "add": "Ajouter",
     "update": "Mettre à jour",
@@ -78,7 +91,12 @@
     "received": "Bonne réception",
     "pending": "En attente d'envoi"
   },
-  "steps": { "sent": "Envoyée", "accepted": "Acceptée", "preparing": "Préparation", "ready": "Prête" },
+  "steps": {
+    "sent": "Envoyée",
+    "accepted": "Acceptée",
+    "preparing": "Préparation",
+    "ready": "Prête"
+  },
   "line": {
     "refused": "Refusée",
     "done": "Préparée",
@@ -95,7 +113,11 @@
     "edited": "La boutique a modifié la commande",
     "noteForLabo": "Note pour le labo",
     "refuseTitle": "Refuser · {{name}}",
-    "reasons": ["Rupture", "Trop", "Pas aujourd'hui"],
+    "reasons": [
+      "Rupture",
+      "Trop",
+      "Pas aujourd'hui"
+    ],
     "other": "Autre motif…",
     "sent": "Envoyée au labo",
     "refused": "Commande refusée",
@@ -126,7 +148,11 @@
     "partial": "Préparé en partie",
     "notDone": "Pas préparé",
     "prepared": "Préparé",
-    "reasons": ["Rupture", "Pas le temps", "Panne"],
+    "reasons": [
+      "Rupture",
+      "Pas le temps",
+      "Panne"
+    ],
     "other": "Autre raison…",
     "closed": "Commande prête",
     "handover": "Passation",
@@ -210,7 +236,13 @@
     "android": "Touchez le menu ⋮ puis « Installer l'application ».",
     "later": "Plus tard"
   },
-  "settings": { "title": "Réglages", "language": "Langue", "account": "Compte", "outbox": "Envois en attente", "outboxFailed": "Refusé par le serveur" },
+  "settings": {
+    "title": "Réglages",
+    "language": "Langue",
+    "account": "Compte",
+    "outbox": "Envois en attente",
+    "outboxFailed": "Refusé par le serveur"
+  },
   "errors": {
     "forbidden": "Action non autorisée.",
     "not_found": "Commande introuvable.",
@@ -226,5 +258,61 @@
     "not_signed_in": "Session expirée. Reconnectez-vous.",
     "network": "Pas de connexion. Réessayez."
   },
-  "time": { "min": "{{n}} min", "h": "{{n}} h", "now": "maintenant" }
+  "time": {
+    "min": "{{n}} min",
+    "h": "{{n}} h",
+    "now": "maintenant"
+  },
+  "events": {
+    "submitted": "Envoyée",
+    "shop_edited": "Modifiée par la boutique",
+    "cancelled": "Supprimée",
+    "review_started": "Ouverte",
+    "review_released": "Remise en attente",
+    "validated": "Envoyée au labo",
+    "refused": "Refusée",
+    "note_added": "Note ajoutée",
+    "prep_started": "Préparation commencée",
+    "line_prepped": "Ligne préparée",
+    "line_problem": "Problème sur une ligne",
+    "ready": "Prête",
+    "received": "Livrée"
+  },
+  "catalogAdmin": {
+    "title": "Catalogue",
+    "newProduct": "Nouveau produit",
+    "photo": "Photo",
+    "addPhoto": "Ajouter une photo",
+    "nameFr": "Nom (français)",
+    "nameAr": "Nom (arabe)",
+    "descFr": "Description (français)",
+    "descAr": "Description (arabe)",
+    "category": "Catégorie",
+    "type": "Type",
+    "modes": {
+      "count": "Pièce",
+      "weight": "Poids",
+      "volume": "Volume",
+      "pack": "Pack"
+    },
+    "step": "Pas",
+    "packs": "Packs",
+    "packPlaceholder": "ex. 5 L",
+    "addPack": "Ajouter un pack",
+    "saved": "Produit enregistré",
+    "readOnly": "Seul le patron modifie les produits",
+    "units": {
+      "count": "pcs",
+      "weight": "g",
+      "volume": "ml"
+    },
+    "photoError": "Photo trop lourde",
+    "active": "Disponible"
+  },
+  "followup2": {
+    "cancel": "Annuler la commande",
+    "cancelConfirm": "Annuler cette commande ?",
+    "cancelled": "Commande annulée",
+    "addNote": "Note pour le labo"
+  }
 }

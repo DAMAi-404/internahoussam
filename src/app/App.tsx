@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { BackendProvider, useSession } from '@/app/backend'
 import { homeFor } from '@/app/routes'
+import { OwnerApp } from '@/app/OwnerApp'
 import { ShopApp } from '@/app/ShopApp'
 import { Gallery } from '@/dev/Gallery'
 import { Login } from '@/features/auth/Login'
@@ -19,7 +20,7 @@ export function App() {
           <Route path="/dev/ui" element={<Gallery />} />
           <Route path="/login" element={<Login />} />
           <Route path="/shop/*" element={<Gate roles={['shop']}><ShopApp /></Gate>} />
-          <Route path="/owner/*" element={<Gate roles={['owner', 'deputy']}><Placeholder /></Gate>} />
+          <Route path="/owner/*" element={<Gate roles={['owner', 'deputy']}><OwnerApp /></Gate>} />
           <Route path="/labo/*" element={<Gate roles={['labo']}><Placeholder /></Gate>} />
           <Route path="*" element={<Home />} />
         </Routes>
