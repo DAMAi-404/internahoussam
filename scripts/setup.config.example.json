@@ -1,0 +1,8 @@
+{
+  "owner": { "email": "owner@example.com", "password": "change-me-long-password", "name": "Patron" },
+  "deputy": { "email": "deputy@example.com", "password": "change-me-long-password", "name": "Adjoint", "locale": "ar" },
+  "labo": { "email": "labo@accounts.mahroussa.app", "password": "change-me-long-password", "locale": "ar" },
+  "teamPins": { "matin": "1111", "nuit": "2222" },
+  "shopPins": {},
+  "vapidSubject": "mailto:owner@example.com"
+}

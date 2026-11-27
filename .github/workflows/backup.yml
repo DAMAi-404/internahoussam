@@ -1,0 +1,30 @@
+name: backup
+# Nightly database backup kept 30 days (PRD RET-3): the Supabase free tier has no backups.
+# Needs the repository secret SUPABASE_DB_URL (Supabase > Project settings > Database > connection string).
+on:
+  schedule:
+    - cron: '30 1 * * *' # 02:30 Algiers, before the 03:00 purge
+  workflow_dispatch:
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secret
+        id: check
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: echo "ok=$([ -n "$DB_URL" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - name: pg_dump
+        if: steps.check.outputs.ok == 'true'
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          sudo apt-get install -y -qq postgresql-client > /dev/null
+          pg_dump "$DB_URL" --format=custom --no-owner --schema=public --file=mahroussa.dump
+          test "$(stat -c %s mahroussa.dump)" -gt 10000 || (echo "dump suspiciously small" && exit 1)
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.ok == 'true'
+        with:
+          name: mahroussa-db-${{ github.run_id }}
+          path: mahroussa.dump
+          retention-days: 30

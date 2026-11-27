@@ -39,6 +39,17 @@ Rule: the **newest stable version that is at least two weeks old and compatible 
 | @supabase/supabase-js | 2.119.0 | |
 | Node | 22 (CI and local) | `@types/node` 22 to match |
 
+### Two backends, one interface
+
+`src/backend/types.ts` defines every call the UI makes. Two implementations:
+
+| Backend | When | Where the rules run |
+|---|---|---|
+| **demo** (`src/backend/demo.ts`) | No Supabase env vars | `src/domain/*` in the browser; data in localStorage shared by tabs, session per tab, realtime through BroadcastChannel, 20 days of seeded history |
+| **supabase** (`src/backend/supabase.ts`) | `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` set | Postgres RPCs in `supabase/migrations` (same rules, tested by pgTAP) |
+
+The demo is not a mock: it runs the same domain rules and lets the whole app be tested and shown before go-live (docs/GO_LIVE.md).
+
 ## 2. System overview
 
 ```mermaid
@@ -56,7 +67,7 @@ flowchart LR
         PG[(Postgres<br/>tables · RLS · RPC)]
         RT[Realtime]
         ST[Storage<br/>product photos]
-        EF[Edge Functions<br/>shop-login · notify]
+        EF[Edge Function<br/>notify]
     end
     PUSH[Browser push services<br/>FCM / APNs / Mozilla]
 
@@ -268,9 +279,10 @@ Scaffolded in Phase 0. Every folder exists in the repo; `features/*/README.md` l
 ├─ docs/                             PRD · ARCHITECTURE · DESIGN_SYSTEM · ROLES
 ├─ prototype/index.html              visual reference (v0, superseded by docs where they differ)
 ├─ public/                           icons, splash screens
+├─ scripts/                         setup-supabase.mjs (go-live accounts) · db/ (local Postgres + pgTAP runner)
 ├─ supabase/
 │  ├─ migrations/                    timestamped SQL: schema, RLS, RPCs, triggers, cron jobs
-│  ├─ functions/                     shop-login/ · notify/  (Deno edge functions)
+│  ├─ functions/                     notify/  (Deno edge function: Web Push)
 │  ├─ tests/                         pgTAP: rls_*.sql · rpc_*.sql · purge_*.sql
 │  └─ seed.sql                       12 shops, 10 categories, 2 teams, refusal reasons
 ├─ src/

@@ -82,9 +82,11 @@ Four roles in V1. Roles are enforced in the **database** (Row-Level Security + `
 
 Supabase Auth expects email + password. We map each shop to a synthetic login:
 
-- email: `shop-<slug>@auth.mahroussa.internal` (never shown to anyone)
-- password: the 6-digit PIN, combined with a server-side pepper inside an Edge Function `shop-login` that rate-limits attempts (5 tries per 15 minutes per shop)
+- email: `shop-<id>@accounts.mahroussa.app` (never shown to anyone, no mail is ever sent)
+- password: the 6-digit PIN, set by `scripts/setup-supabase.mjs` (owner reruns it to change a PIN)
+- attempts are rate-limited by Supabase Auth's built-in sign-in limits; public sign-up is disabled (GO_LIVE §1)
+- team PINs (labo handover) are bcrypt hashes in `labo_teams`, checked by `switch_labo_team()`, never readable by any user
 
 The user sees: **a list of the 12 shop names → keypad → done.** This happens once per device.
 
-Trade-off: a 6-digit PIN is weak on its own. It is acceptable here because (a) the endpoint is rate-limited, (b) the data has no financial value, (c) the owner can revoke a device at any time, and (d) the alternative (real passwords) would mean the shops don't use the app at all.
+Decision (2026-11-27): the planned `shop-login` edge function with a pepper was dropped; Supabase Auth's own rate limiting covers the need with less code. Trade-off: a 6-digit PIN is weak on its own. It is acceptable here because (a) sign-in is rate-limited, (b) the data has no financial value, (c) the owner can revoke a device at any time, and (d) the alternative (real passwords) would mean the shops don't use the app at all.

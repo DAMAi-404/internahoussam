@@ -12,6 +12,7 @@ Guidance for Claude Code (and any contributor) working in this repository.
 | `docs/ROLES.md` | Permission matrix (must match RLS) |
 | `docs/ARCHITECTURE.md` | Stack, schema, RPCs, notifications pipeline, stats, retention, file tree |
 | `docs/DESIGN_SYSTEM.md` | Tokens, components, UX rules |
+| `docs/GO_LIVE.md` | Connecting the real Supabase project (the app runs in demo mode until then) |
 | `prototype/index.html` | Visual reference only (v0). **Docs win** where they differ. |
 
 If code and docs disagree, stop and ask. Update the doc in the same PR when a decision changes, and add a line to the PRD decisions log.
@@ -29,6 +30,7 @@ If code and docs disagree, stop and ask. Update the doc in the same PR when a de
 - **Never** add prices, payment, stock, invoicing or data export. Statistics are about **quantities** only.
 
 ### Data integrity
+- Business rules exist twice on purpose: `src/domain/*` (demo backend, unit-tested) and the SQL RPCs (pgTAP-tested). **Change both together** and keep their tests in sync.
 - Order state changes happen **only** through Postgres RPCs in `supabase/migrations`. The client never `insert`s/`update`s `orders`, `order_lines`, `order_notes`, `order_events` or `notifications` directly (except `mark_notifications_read`).
 - Every RPC that mutates an order checks role + scope + current status + `version`, and writes the change **and** an `order_events` row in the same transaction.
 - `order_events` is append-only. The **only** deletion is the nightly `purge_old_orders()` (30 days, final-status orders, after `aggregate_day()`). Never write any other update or delete on it.
@@ -87,9 +89,8 @@ pnpm typecheck           # tsc --noEmit
 pnpm lint
 pnpm test                # vitest (unit)
 pnpm build
-supabase start           # local backend (Docker)
-supabase db reset        # apply migrations + seed
-supabase test db         # pgTAP (RLS + RPC)
+PGHOST=/tmp PGPORT=54329 scripts/db/test-local.sh   # migrations + pgTAP on plain Postgres 16 (no Docker)
+supabase start           # full local stack (Docker), then: supabase db reset && supabase test db
 supabase gen types typescript --local > src/types/database.ts
 pnpm e2e                 # Playwright (pass --trace off unless debugging)
 ```

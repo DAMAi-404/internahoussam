@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router'
 import { BackendProvider, useSession } from '@/app/backend'
-import { homeFor } from '@/app/routes'
+import { homeFor, orderPath } from '@/app/routes'
 import { LaboApp } from '@/app/LaboApp'
 import { OwnerApp } from '@/app/OwnerApp'
 import { ShopApp } from '@/app/ShopApp'
@@ -25,11 +25,21 @@ export function App() {
           <Route path="/shop/*" element={<Gate roles={['shop']}><ShopApp /></Gate>} />
           <Route path="/owner/*" element={<Gate roles={['owner', 'deputy']}><OwnerApp /></Gate>} />
           <Route path="/labo/*" element={<Gate roles={['labo']}><LaboApp /></Gate>} />
+          <Route path="/orders/:id" element={<OrderLink />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </BackendProvider>
     </BrowserRouter>
   )
+}
+
+/** Notification taps open /orders/:id: send each role to its own screen for that order. */
+function OrderLink() {
+  const session = useSession()
+  const { id } = useParams()
+  if (session.isPending) return <Splash />
+  if (!session.data || !id) return <Navigate to="/login" replace />
+  return <Navigate to={orderPath(session.data.role, id)} replace />
 }
 
 function Home() {

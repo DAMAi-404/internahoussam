@@ -5,7 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig(
-  { ignores: ['dist', 'dev-dist', 'prototype', 'supabase/functions', 'node_modules'] },
+  { ignores: ['dist', 'dev-dist', 'prototype', 'supabase/functions', 'node_modules', 'e2e', 'scripts'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.strict, reactHooks.configs.flat['recommended-latest']],

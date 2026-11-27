@@ -62,6 +62,8 @@ export interface Backend {
   // notifications
   listNotifications(): Promise<AppNotification[]>
   markNotificationsRead(ids: string[] | 'all'): Promise<void>
+  /** Web Push (Supabase only): stores this device's subscription for the `notify` edge function. */
+  savePushSubscription?(sub: { endpoint: string; keys: { p256dh: string; auth: string } }): Promise<void>
 
   // statistics (shops are forced to their own shop)
   getStats(query: StatsQuery): Promise<StatsResult>

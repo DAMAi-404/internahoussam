@@ -30,38 +30,43 @@ Shops: El Madania, 1er Mai, Sidi Abdelah, Kouba, Rouiba, Birtouta, Boulevard, A�
 
 React 19 + TypeScript 6 + Vite 8 (PWA) · Tailwind CSS 4 · React Router 8 · TanStack Query · Zustand + IndexedDB · i18next (fr/ar) · Supabase (Postgres, Auth, Realtime, Storage, Edge Functions) · Web Push · Cloudflare Pages.
 
-## Getting started
+## Try it now (demo mode)
 
-Requires Node 22+ and pnpm. The database part also needs the Supabase CLI and Docker.
+Without Supabase keys the app runs entirely in the browser with realistic data (20 days of history, live orders in every state).
 
 ```bash
 pnpm install
 ```
 
 ```bash
-cp .env.example .env.local
-```
-
-```bash
 pnpm dev
 ```
 
-Checks:
+Open http://localhost:5173 and pick a role on the login screen (shop PIN `123456`, labo team PINs `1111` / `2222`). Open several tabs to play several devices at once: they stay in sync.
+
+## Checks
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm test && pnpm build
 ```
 
-Database (from Phase 0 step 2):
+Database (migrations + 67 pgTAP tests on a plain Postgres 16, no Docker):
 
 ```bash
-supabase start
+PGHOST=/tmp PGPORT=54329 scripts/db/test-local.sh
 ```
 
-```bash
-supabase db reset
-```
+## Go live
+
+Follow [docs/GO_LIVE.md](docs/GO_LIVE.md): create the Supabase project, apply the migrations, run `scripts/setup-supabase.mjs`, deploy the `notify` function, set three env vars. The app switches from demo to Supabase automatically.
 
 ## Status
 
-**Phase 0 (foundations)**: docs v1.0 and the app scaffold are done. The database schema, RLS and RPCs come next. See [PRD §11](docs/PRD.md#11-release-plan).
+| Part | State |
+|---|---|
+| Shop app (catalogue, product sheet, cart, offline send, my orders, edit/delete, stats) | ✅ built, tested on an emulated iPhone (fr + ar) |
+| Owner / deputy app (inbox, review, Suivi, notes, catalogue editor with photos, Activité) | ✅ |
+| Labo app (team themes, handover PIN, alarm, problem sheet, close) | ✅ |
+| Notifications (centre, live banners, sounds, Web Push pipeline) | ✅ push needs go-live keys |
+| Database (schema, RLS, RPCs, notifications, stats, purge, backups) | ✅ 67 pgTAP tests |
+| Supabase project + accounts | ⏳ owner creates the project ([GO_LIVE](docs/GO_LIVE.md)) |

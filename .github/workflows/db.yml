@@ -1,0 +1,22 @@
+name: db
+# Migrations + pgTAP on plain Postgres 16 (same runner as scripts/db/test-local.sh, no Docker-in-Docker).
+on:
+  pull_request:
+    paths: ['supabase/**', 'scripts/db/**']
+  push:
+    branches: [main]
+    paths: ['supabase/**', 'scripts/db/**']
+jobs:
+  pgtap:
+    runs-on: ubuntu-latest
+    container: postgres:16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start Postgres with pgTAP
+        run: |
+          apt-get update -qq && apt-get install -y -qq postgresql-16-pgtap > /dev/null
+          mkdir -p /tmp/pgdata && chown postgres /tmp/pgdata
+          su postgres -c "/usr/lib/postgresql/16/bin/initdb -D /tmp/pgdata -U postgres --auth=trust > /dev/null"
+          su postgres -c "/usr/lib/postgresql/16/bin/pg_ctl -D /tmp/pgdata -o '-p 5432 -k /tmp' -l /tmp/pg.log start"
+      - name: Migrations + tests
+        run: PGHOST=/tmp PGPORT=5432 bash scripts/db/test-local.sh

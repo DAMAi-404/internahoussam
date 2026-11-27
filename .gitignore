@@ -11,3 +11,7 @@ supabase/.temp
 playwright-report
 test-results
 .DS_Store
+
+# go-live secrets (scripts/setup-supabase.mjs)
+scripts/setup.config.json
+scripts/setup.output.json

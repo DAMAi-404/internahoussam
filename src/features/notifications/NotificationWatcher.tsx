@@ -3,13 +3,14 @@ import { BellRing } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useSession } from '@/app/backend'
+import { useBackend, useSession } from '@/app/backend'
 import { orderPath } from '@/app/routes'
 import { Button, InAppBanner } from '@/components/ui'
 import type { AppNotification } from '@/domain/types'
 import { playChime, unlockAudio } from '@/features/labo/device'
 import { queryKeys } from '@/lib/queryKeys'
 import { useNotificationText } from './NotificationBell'
+import { ensurePushSubscription } from './push'
 
 /**
  * Watches the notification list (refreshed by realtime) and, for each new one:
@@ -19,6 +20,7 @@ import { useNotificationText } from './NotificationBell'
  */
 export function NotificationWatcher() {
   const qc = useQueryClient()
+  const backend = useBackend()
   const session = useSession().data
   const text = useNotificationText()
   const navigate = useNavigate()
@@ -64,6 +66,11 @@ export function NotificationWatcher() {
     }
   }, [qc])
 
+  // Re-register push on every start: subscriptions can expire or change device-side.
+  useEffect(() => {
+    if (session) void ensurePushSubscription(backend)
+  }, [backend, session])
+
   useEffect(() => {
     if (!banner) return
     const timer = window.setTimeout(() => setBanner(null), 5000)
@@ -86,13 +93,19 @@ export function NotificationWatcher() {
 /** Asks once for notification permission, from a tap (browsers refuse it otherwise). */
 export function NotificationPermissionCard() {
   const { t } = useTranslation()
+  const backend = useBackend()
   const [state, setState] = useState(() => ('Notification' in window ? Notification.permission : 'denied'))
   if (state !== 'default') return null
   return (
     <div className="mx-4 mt-3 flex items-center gap-3 rounded-2xl bg-card px-4 py-3 text-fg">
       <BellRing size={20} className="shrink-0 text-sage-deep" />
       <span className="min-w-0 flex-1 text-[15px] font-medium">{t('notifications.enable')}</span>
-      <Button size="md" variant="tinted" onClick={() => void Notification.requestPermission().then(setState)}>
+      <Button size="md" variant="tinted" onClick={() =>
+          void Notification.requestPermission().then((p) => {
+            setState(p)
+            if (p === 'granted') void ensurePushSubscription(backend)
+          })
+        }>
         {t('action.ok')}
       </Button>
     </div>
