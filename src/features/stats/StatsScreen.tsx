@@ -161,7 +161,7 @@ function StatsBody({ r, kind, isShop, today, onProduct, shopName }: { r: StatsRe
               key: `${p.productId}|${p.packLabel ?? ''}`,
               name: loc(p.name, i18n.language),
               value: <Qty mode={p.mode} qty={p.quantity} pack={p.packLabel} />,
-              amount: p.mode === 'pack' ? p.quantity * 10 : p.quantity,
+              amount: p.shops,
               sub: isShop ? undefined : t('stats.shops', { n: p.shops }),
               onClick: () => onProduct(p.productId),
             }))}

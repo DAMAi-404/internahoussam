@@ -1,4 +1,4 @@
-import { Ban, MessageSquare, Moon, Share2, Sun } from 'lucide-react'
+import { Ban, MessageSquarePlus, Moon, Share2, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -42,7 +42,7 @@ export function OrderFollowScreen({ order: o }: { order: Order }) {
               </IconButton>
               {canNote && (
                 <IconButton label={t('followup2.addNote')} tone="onDark" onClick={() => setNoting('order')}>
-                  <MessageSquare size={19} />
+                  <MessageSquarePlus size={19} />
                 </IconButton>
               )}
               {o.status === 'validated' && (
@@ -106,7 +106,7 @@ export function OrderFollowScreen({ order: o }: { order: Order }) {
                     <NoteIcon notes={notesFor(l.id)} size={34} />
                     {canNote && !refused && (
                       <IconButton label={t('followup2.addNote')} size={36} onClick={() => setNoting(l)}>
-                        <MessageSquare size={16} />
+                        <MessageSquarePlus size={17} />
                       </IconButton>
                     )}
                   </>
